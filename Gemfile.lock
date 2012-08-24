@@ -1,0 +1,10 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    motion-testflight (1.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  motion-testflight

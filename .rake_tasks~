@@ -1,0 +1,15 @@
+archive:development
+archive:release
+build
+build:device
+build:simulator
+clean
+config
+ctags
+default
+device
+simulator
+spec
+static
+testflight
+testflight:submit
