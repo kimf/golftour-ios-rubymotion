@@ -8,10 +8,11 @@ require 'bundler'
 Bundler.require
 
 Motion::Project::App.setup do |app|
+
   app.name = 'Golftour'
   app.prerendered_icon = true
-  app.sdk_version = "6.0"
-  app.device_family = [:iphone, :ipad]
+  app.sdk_version = "6.1"
+  app.device_family = [:iphone]
 
   app.status_bar_style = :black_opaque
 
@@ -21,8 +22,11 @@ Motion::Project::App.setup do |app|
   app.testflight.team_token = "3694f085bf23e82efd818f1dfb6e8676_MTI1MDI2MjAxMi0wOC0yNCAxNTo1MDo0Ny44MTkwNDc"
 
   #Frameworks
-  # app.frameworks << 'CoreLocation'
-  # app.frameworks << 'MapKit'
+  app.frameworks << "CoreData"
+  app.frameworks += ['QuartzCore']
+
+  app.vendor_project('vendor/nsrails', :xcode, :target => 'NSRails', :headers_dir => 'Source')
+
 
   #apple cert stuff
   app.provisioning_profile = '/Users/kimf/Dropbox/Apple Certificates and stuff/Golftour.mobileprovision'
