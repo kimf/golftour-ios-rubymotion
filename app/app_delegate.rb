@@ -4,9 +4,9 @@ class AppDelegate
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
-    NSRConfig.defaultConfig.appURL = "http://api.golftour.dev"
-    NSRConfig.defaultConfig.appUsername = "kim.fransman@gmail.com"
-    NSRConfig.defaultConfig.appPassword = "password"
+    NSRConfig.defaultConfig.appURL = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')
+    NSRConfig.defaultConfig.appUsername = NSBundle.mainBundle.objectForInfoDictionaryKey('API_EMAIL')
+    NSRConfig.defaultConfig.appPassword = NSBundle.mainBundle.objectForInfoDictionaryKey('API_PASS')
     NSRConfig.defaultConfig.autoinflectsPropertyNames = false
 
     @window.rootViewController = UINavigationController.alloc.initWithRootViewController ScorecardsViewController.new
