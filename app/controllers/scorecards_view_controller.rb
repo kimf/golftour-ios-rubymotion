@@ -1,4 +1,5 @@
 class ScorecardsViewController < UITableViewController
+  stylesheet :scorecards_sheet
   include Refreshable
 
   attr_accessor :scorecards
@@ -9,7 +10,7 @@ class ScorecardsViewController < UITableViewController
   end
 
   def viewDidLoad
-    self.title = "Scorecards"
+    layout tableView, :table
     tableView.rowHeight = 60
 
     load_data
@@ -30,24 +31,24 @@ class ScorecardsViewController < UITableViewController
     @scorecards.size
   end
 
+  def tableView(tableView, titleForHeaderInSection:section)
+    "Scorecards"
+  end
+
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    cell = tableView.dequeueReusableCellWithIdentifier('Cell')
-    cell ||= UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:'Cell')
+    fresh_cell.tap do |cell|
+      s = @scorecards[indexPath.row]
+      cell.textLabel.text = "#{s.course[0..27]}"
+      cell.detailTextLabel.text = "#{s.time_of_day} of #{s.date}"
 
-    s = @scorecards[indexPath.row]
-
-    cell.textLabel.text = "#{s.course[0..27]}"
-    cell.detailTextLabel.text = "#{s.time_of_day} of #{s.date}"
-
-    score_label = UILabel.alloc.initWithFrame([[280, 10], [30, 30]])
-    score_label.text = "#{s.strokes}"
-    score_label.backgroundColor = UIColor.grayColor
-    score_label.textColor = UIColor.whiteColor
-    score_label.textAlignment = NSTextAlignmentCenter
-    score_label.layer.cornerRadius = 4
-    cell.contentView.addSubview(score_label)
-
-    cell
+      score_label = UILabel.alloc.initWithFrame([[280, 10], [30, 30]])
+      score_label.text = "#{s.strokes}"
+      score_label.backgroundColor = UIColor.colorWithRed(62.0/255, green: 69.0/255, blue: 95.0/255, alpha:1)
+      score_label.textColor = UIColor.whiteColor
+      score_label.textAlignment = NSTextAlignmentCenter
+      score_label.layer.cornerRadius = 4
+      cell.contentView.addSubview(score_label)
+    end
   end
 
   # def tableView(tableView, commitEditingStyle:editingStyle, forRowAtIndexPath:indexPath)
@@ -57,14 +58,23 @@ class ScorecardsViewController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     rvc = ScorecardViewController.alloc.init
     rvc.scorecard = scorecards[indexPath.row]
-    self.navigationController.pushViewController rvc, animated:true
+  end
+
+  def tableView(tableView, viewForHeaderInSection:section)
+    view = UIView.alloc.initWithFrame([[0, 0], [320, 30]])
+    layout(view, :header) do
+      subview(UIView, :bottom_line)
+      label = subview(UILabel, :header_label)
+      label.text = tableView(tableView, titleForHeaderInSection:section)
+    end
+    view
   end
 
 
   def load_data
     Golftour.when_reachable do
       SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
-      Scorecard.find_all do |results, response|
+      Player.current.scorecards do |results, response|
         SVProgressHUD.dismiss
         if response.ok? && results
           @scorecards = results
@@ -77,4 +87,17 @@ class ScorecardsViewController < UITableViewController
     end
   end
 
+
+  private
+    def fresh_cell
+      tableView.dequeueReusableCellWithIdentifier('Cell') ||
+      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:'Cell').tap do |cell|
+        layout cell, :cell do
+          subview(UIView, :top_line)
+          subview(UIView, :bottom_line)
+        end
+
+        cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))
+      end
+    end
 end

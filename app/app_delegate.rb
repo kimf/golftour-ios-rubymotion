@@ -3,12 +3,10 @@ class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     return true if RUBYMOTION_ENV == 'test'
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-
     Golftour.server = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')
 
-    @window.rootViewController = UINavigationController.alloc.initWithRootViewController ScorecardsViewController.alloc.init
-    @window.rootViewController.wantsFullScreenLayout = true
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    @window.rootViewController = MonitorNavigationController.alloc.init
     @window.makeKeyAndVisible
     true
   end
