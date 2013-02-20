@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
-
 require 'rubygems'
 require 'bundler'
 
-Bundler.require
+if ARGV.join(' ') =~ /spec/
+  Bundler.require :default, :spec
+else
+  Bundler.require
+end
 
 Motion::Project::App.setup do |app|
 
@@ -14,29 +17,32 @@ Motion::Project::App.setup do |app|
   app.sdk_version = "6.1"
   app.device_family = [:iphone]
 
-  app.status_bar_style = :black_opaque
+  app.files = (app.files - Dir.glob('./app/**/*.rb')) + Dir.glob("./lib/**/*.rb") + Dir.glob("./config/**/*.rb") + Dir.glob("./app/**/*.rb")
 
-  #Frameworks
+  #Vendors
+  app.vendor_project('vendor/Reachability', :static)
+
+  #Pods
+  app.pods do
+    pod 'SVProgressHUD', '0.9'
+    pod 'TestFlightSDK', '1.2.3.beta1'
+  end
+
+  #Core iOS Frameworks
   app.frameworks << "CoreData"
   app.frameworks += ['QuartzCore']
 
-  app.vendor_project('vendor/nsrails', :xcode, :target => 'NSRails', :headers_dir => 'Source')
-
-
-   if File.exists?('./config.yml')
+  if File.exists?('./config.yml')
     config = YAML::load_file('./config.yml')
 
     app.identifier = config['identifier']
 
     app.info_plist['API_URL'] = config['api_url']
-    app.info_plist['API_EMAIL'] = config['api_email']
-    app.info_plist['API_PASS'] = config['api_pass']
 
     app.development do
       # This entitlement is required during development but must not be used for release.
       app.entitlements['get-task-allow'] = true
       #testflight
-      app.testflight.sdk = 'vendor/TestFlightSDK1.1'
       app.testflight.api_token = config['testflight']['api_token']
       app.testflight.team_token = config['testflight']['team_token']
       #apple cert stuff

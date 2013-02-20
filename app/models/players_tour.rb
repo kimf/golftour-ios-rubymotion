@@ -1,3 +1,0 @@
-class PlayersTour < NSRRemoteObject
-
-end

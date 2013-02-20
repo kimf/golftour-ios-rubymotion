@@ -1,16 +1,8 @@
-class Scorecard < NSRRemoteObject
-  attr_accessor :player, :scores, :date, :time_of_day, :course, :par, :distance, :notes, :scores_count, :out, :in, :strokes, :points, :putts, :tee
+class Scorecard < MotionResource::Base
+  attr_accessor :id, :date, :time_of_day, :course, :strokes
 
-  def remoteProperties
-    super + ["player", "scores", "date", "time_of_day", "course", "par", "distance", "notes", "scores_count", "out", "in", "strokes", "points", "putts", "tee"]
-  end
+  # has_many :scores
 
-  def nestedClassForProperty(property)
-    Score if property == "scores"
-    #Player if property == "player"
-  end
-
-  def shouldOnlySendIDKeyForNestedObjectProperty(property)
-    (property == "player")
-  end
+  self.collection_url = "scorecards"
+  self.member_url = "scorecards/:id"
 end
