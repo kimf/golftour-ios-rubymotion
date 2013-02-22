@@ -1,8 +1,8 @@
-class Scorecard < MotionResource::Base
-  attr_accessor :id, :date, :time_of_day, :course, :strokes
+class Scorecard < MotionMigrate::Model
+  property :date, :string
+  property :time_of_day, :string
+  property :course, :string
+  property :strokes, :string
 
-  # has_many :scores
-
-  self.collection_url = "scorecards"
-  self.member_url = "scorecards/:id"
+  belongs_to :player, :class_name => "Player",  :inverse_of => :scorecards
 end

@@ -24,11 +24,12 @@ class ScorecardsViewController < UITableViewController
 
   def viewWillAppear(animated)
     super
+    self.title = "Scorecards"
     tableView.reloadData
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    @scorecards.size
+    @scorecards.count
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
@@ -72,19 +73,23 @@ class ScorecardsViewController < UITableViewController
 
 
   def load_data
-    Golftour.when_reachable do
-      SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
-      Player.current.scorecards do |results, response|
-        SVProgressHUD.dismiss
-        if response.ok? && results
-          @scorecards = results
-        else
-          Golftour.offline_alert
-        end
-        tableView.reloadData
-        end_refreshing
-      end
-    end
+    SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
+    @scorecards = Player.MR_findFirst.scorecards.allObjects
+    SVProgressHUD.dismiss
+    end_refreshing
+    # Golftour.when_reachable do
+    #   SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
+    #   Player.current.scorecards do |results, response|
+    #     SVProgressHUD.dismiss
+    #     if response.ok? && results
+    #       @scorecards = results
+    #     else
+    #       Golftour.offline_alert
+    #     end
+    #     tableView.reloadData
+    #     end_refreshing
+    #   end
+    # end
   end
 
 

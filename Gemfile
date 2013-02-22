@@ -6,7 +6,7 @@ gem 'motion-testflight'
 gem 'motion-cocoapods'
 gem 'teacup'
 gem 'motion-support'
-gem "motion-resource"
+gem 'motion_migrate'
 
 
 group :spec do
