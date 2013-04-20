@@ -48,7 +48,12 @@ GEM
       netrc (~> 0.7.7)
     open4 (1.3.0)
     rake (0.9.6)
-    teacup (1.2.5)
+    sugarcube (0.18.12)
+    sweettea (0.5.3)
+      rake
+      sugarcube
+      teacup
+    teacup (1.2.7)
       rake
     webstub (0.3.4)
     xcodeproj (0.4.3)
@@ -67,5 +72,7 @@ DEPENDENCIES
   motion-testflight
   motion_migrate
   rake
+  sugarcube
+  sweettea
   teacup
   webstub

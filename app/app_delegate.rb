@@ -8,15 +8,18 @@ class AppDelegate
     else
       MagicalRecord.setupCoreDataStackWithAutoMigratingSqliteStoreNamed("Golftour.sqlite")
     end
-
     #Golftour.server = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')
 
     initialize_data
 
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    @window.rootViewController = ScorecardsViewController.alloc.init
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds, cornerRadius: 5, masksToBounds: true)
+
+    @scorecardsController ||= ScorecardsViewController.alloc.init
+    @navigationController ||= UINavigationController.alloc.initWithRootViewController(@scorecardsController)
+
+    @window.rootViewController = @navigationController
     @window.makeKeyAndVisible
-    true
+    #true
   end
 
   def initialize_data

@@ -24,8 +24,7 @@ class ScorecardsViewController < UITableViewController
 
   def viewWillAppear(animated)
     super
-    self.title = "Scorecards"
-    tableView.reloadData
+    self.title = "Golftour"
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
