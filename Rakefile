@@ -25,6 +25,7 @@ Motion::Project::App.setup do |app|
   #Pods
   app.pods do
     pod 'SVProgressHUD', '0.9'
+    pod 'MagicalRecord', '2.1'
     pod 'TestFlightSDK', '1.2.3.beta1'
   end
 

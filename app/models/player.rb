@@ -1,9 +1,7 @@
-class Player < MotionResource::Base
-  attr_accessor :name, :email
+class Player < MotionMigrate::Model
+  property :name, :string
+  property :email, :string
+  property :api_token, :string
 
-  self.member_url = "players/:id"
-
-  cattr_accessor :current
-
-  has_many :scorecards
+  has_many :scorecards, :class_name => "Scorecard", :inverse_of => :player
 end

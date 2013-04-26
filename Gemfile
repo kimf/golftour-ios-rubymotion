@@ -4,9 +4,11 @@ gem 'bubble-wrap'
 gem 'formotion'
 gem 'motion-testflight'
 gem 'motion-cocoapods'
+gem 'sugarcube'
 gem 'teacup'
+gem 'sweettea'
 gem 'motion-support'
-gem "motion-resource"
+gem 'motion_migrate'
 
 
 group :spec do
