@@ -24,7 +24,8 @@ class ScorecardsListController < UITableViewController
     layout tableView, :table
     tableView.rowHeight = 60
 
-    load_data
+
+    load_data unless App::Persistence['authToken'].nil?
 
     on_refresh do
       load_data

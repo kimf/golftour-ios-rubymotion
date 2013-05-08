@@ -36,22 +36,24 @@ class CoursesController < UITableViewController
   def reload_data
     SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
 
-    BW::HTTP.get("#{App.delegate.server}/scorecards?auth_token=#{App.delegate.auth_token}" ) do |response|
+    BW::HTTP.get("#{App.delegate.server}/courses?auth_token=#{App.delegate.auth_token}" ) do |response|
       json = BW::JSON.parse(response.body.to_s)
-      json["scorecards"].each do |scorecard|
-        existing = Scorecard.find(:id, NSFEqualTo, scorecard["id"])
+      json["courses"].each do |course|
+        existing = Course.find(:id, NSFEqualTo, course["id"])
         if existing.length == 0
           puts "Creating new"
-          Scorecard.create_new(
-            scorecard["id"],
-            scorecard["course"],
-            scorecard["par"],
-            scorecard["strokes"],
-            scorecard["date"]
+          new_course = Course.new(
+            id: course["id"],
+            name: course["name"],
+            par: course["par"]
           )
+          course["holes"].each do |hole|
+            new_course.holes << Hole.create(id: hole["id"], nr: hole["nr"], par: hole["par"], hcp: hole["hcp"], length: hole["length"])
+          end
+          new_course.save
         end
       end
-      @scorecards = Scorecard.all
+      @courses = Course.all
       self.tableView.reloadData
       SVProgressHUD.dismiss
       end_refreshing

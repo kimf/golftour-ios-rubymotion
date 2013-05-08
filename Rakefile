@@ -35,9 +35,7 @@ Motion::Project::App.setup do |app|
     config = YAML::load_file('./config.yml')
 
     app.identifier = config['identifier']
-
     app.info_plist['API_URL'] = config['api_url']
-
     app.development do
       # This entitlement is required during development but must not be used for release.
       app.entitlements['get-task-allow'] = true
@@ -57,4 +55,6 @@ Motion::Project::App.setup do |app|
       app.seed_id = config['release']['seed_id']
     end
   end
+
+  puts app.info_plist['API_URL']
 end
