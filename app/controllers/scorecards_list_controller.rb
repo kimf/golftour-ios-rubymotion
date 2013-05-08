@@ -1,8 +1,13 @@
-class ScorecardsViewController < UITableViewController
+class ScorecardsListController < UITableViewController
+  SCORECARDS_ENDPOINT =  + "/#{NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')}/scorecards?auth_token=#{App::Persistence['authToken']}"
   stylesheet :scorecards_sheet
   include Refreshable
 
   attr_accessor :scorecards
+
+  def self.controller
+    @controller ||= ScorecardsListController.alloc.initWithNibName(nil, bundle:nil)
+  end
 
   def init
     @scorecards = []
@@ -73,22 +78,17 @@ class ScorecardsViewController < UITableViewController
 
   def load_data
     SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
-    @scorecards = Player.MR_findFirst.scorecards.allObjects
-    SVProgressHUD.dismiss
-    end_refreshing
-    # Golftour.when_reachable do
-    #   SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
-    #   Player.current.scorecards do |results, response|
-    #     SVProgressHUD.dismiss
-    #     if response.ok? && results
-    #       @scorecards = results
-    #     else
-    #       Golftour.offline_alert
-    #     end
-    #     tableView.reloadData
-    #     end_refreshing
-    #   end
-    # end
+    @scorecards = []
+    BW::HTTP.post(API_REGISTER_ENDPOINT, { headers: headers , payload: data } ) do |response|
+      json = BW::JSON.parse(response.body.to_s)
+      json['scorecards'].each do |scorecard|
+        @scorecards << scorecard
+      end
+      SVProgressHUD.dismiss
+      end_refreshing
+    end
+
+
   end
 
 

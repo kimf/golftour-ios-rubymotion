@@ -2,49 +2,33 @@ class AppDelegate
   attr_reader :window
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    if RUBYMOTION_ENV == 'test'
-      MagicalRecord.setupCoreDataStackWithAutoMigratingSqliteStoreNamed("GolftourTest.sqlite")
-      #return true
-    else
-      MagicalRecord.setupCoreDataStackWithAutoMigratingSqliteStoreNamed("Golftour.sqlite")
-    end
-    #Golftour.server = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')
-
-    initialize_data
-
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds, cornerRadius: 5, masksToBounds: true)
 
-    @scorecardsController ||= ScorecardsViewController.alloc.init
-    @navigationController ||= UINavigationController.alloc.initWithRootViewController(@scorecardsController)
+    @navigationController ||= UINavigationController.alloc.init
+    @navigationController.pushViewController(ScorecardsListController.controller,
+                                              animated:false)
 
     @window.rootViewController = @navigationController
     @window.makeKeyAndVisible
-    #true
+
+    # to force login again: App::Persistence['authToken'] = nil
+
+    if App::Persistence['authToken'].nil?
+      show_welcome_screen
+    end
+
+    true
   end
 
-  def initialize_data
-    MagicalRecord.saveUsingCurrentThreadContextWithBlockAndWait(lambda do |local_context|
-      Player.MR_truncateAll
-      Scorecard.MR_truncateAll
 
-      buck = Player.MR_createInContext(local_context)
-      buck.name = "Buck Danny"
+  def show_welcome_screen
+    @welcomeController           ||= WelcomeController.alloc.init
+    @welcomeNavigationController ||= UINavigationController.alloc.init
 
-      x = Scorecard.MR_createInContext(local_context)
-      x.course = "Los Arqueros"
-      x.strokes = "72"
-      x.time_of_day = "morning"
-      x.date = "2012-02-12"
+    @welcomeNavigationController.pushViewController(@welcomeController, animated:false)
 
-      y = Scorecard.MR_createInContext(local_context)
-      y.course = "Los Arqueros"
-      y.strokes = "74"
-      y.time_of_day = "evening"
-      y.date = "2012-02-10"
 
-      buck.addScorecardsObject x
-      buck.addScorecardsObject y
-      NSManagedObjectContext.contextForCurrentThread.MR_saveToPersistentStoreAndWait
-    end)
+    ScorecardsListController.controller.presentModalViewController(@welcomeNavigationController,
+                                                                    animated:true)
   end
 end

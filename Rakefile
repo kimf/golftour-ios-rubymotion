@@ -3,6 +3,7 @@ $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
 require 'rubygems'
 require 'bundler'
+require 'yaml'
 
 if ARGV.join(' ') =~ /spec/
   Bundler.require :default, :spec
@@ -10,28 +11,21 @@ else
   Bundler.require
 end
 
+#specific, needed parts from bubble-wrap
+require 'bubble-wrap/http'
+require 'bubble-wrap/core'
+
 Motion::Project::App.setup do |app|
 
   app.name = 'Golftour'
-  app.prerendered_icon = true
   app.sdk_version = "6.1"
-  app.device_family = [:iphone]
+  app.device_family = :iphone
 
   app.files = (app.files - Dir.glob('./app/**/*.rb')) + Dir.glob("./lib/**/*.rb") + Dir.glob("./config/**/*.rb") + Dir.glob("./app/**/*.rb")
 
-  #Vendors
-  app.vendor_project('vendor/Reachability', :static)
-
-  #Pods
   app.pods do
-    pod 'SVProgressHUD', '0.9'
-    pod 'MagicalRecord', '2.1'
-    pod 'TestFlightSDK', '1.2.3.beta1'
+    pod 'SVProgressHUD'
   end
-
-  #Core iOS Frameworks
-  app.frameworks << "CoreData"
-  app.frameworks += ['QuartzCore']
 
   if File.exists?('./config.yml')
     config = YAML::load_file('./config.yml')
