@@ -1,10 +1,14 @@
 PODS:
+  - NanoStore (2.6.4)
   - SVProgressHUD (0.9)
 
 DEPENDENCIES:
+  - NanoStore
+  - NanoStore (~> 2.6.0)
   - SVProgressHUD
 
 SPEC CHECKSUMS:
+  NanoStore: 73d29e30e1e7f253f719c6ad1d60181ebcf1b5be
   SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
 
 COCOAPODS: 0.19.1

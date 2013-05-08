@@ -1,10 +1,17 @@
 Teacup::Stylesheet.new :scorecards_sheet do
+
+  # style :root,
+  #   backgroundColor: "#69666f".to_color
+
   style :table,
     backgroundColor: UIColor.colorWithRed(50.0/255, green: 57.0/255, blue: 73.0/255, alpha:1),
     separatorStyle: UITableViewCellSeparatorStyleNone,
     sectionHeaderHeight: 30
 
   style :cell,
+    textColor: UIColor.colorWithRed(196.0/255, green: 204.0/255, blue: 218.0/255, alpha:1)
+
+  style :detailTextLabel,
     textColor: UIColor.colorWithRed(196.0/255, green: 204.0/255, blue: 218.0/255, alpha:1)
 
   style :selected,

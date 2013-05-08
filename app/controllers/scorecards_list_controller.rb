@@ -1,5 +1,4 @@
 class ScorecardsListController < UITableViewController
-  SCORECARDS_ENDPOINT =  + "/#{NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')}/scorecards?auth_token=#{App::Persistence['authToken']}"
   stylesheet :scorecards_sheet
   include Refreshable
 
@@ -7,6 +6,13 @@ class ScorecardsListController < UITableViewController
 
   def self.controller
     @controller ||= ScorecardsListController.alloc.initWithNibName(nil, bundle:nil)
+  end
+
+  layout :table do
+    self.title = "Simple Golftour"
+    @scorecards = Scorecard.all
+    playButton = UIBarButtonItem.alloc.initWithTitle("Play!", style: UIBarButtonItemStylePlain, target:self, action:'play')
+    self.navigationItem.rightBarButtonItem = playButton
   end
 
   def init
@@ -27,13 +33,8 @@ class ScorecardsListController < UITableViewController
     super
   end
 
-  def viewWillAppear(animated)
-    super
-    self.title = "Golftour"
-  end
-
   def tableView(tableView, numberOfRowsInSection:section)
-    @scorecards.count
+    @scorecards.count || 0
   end
 
   def tableView(tableView, titleForHeaderInSection:section)
@@ -43,8 +44,8 @@ class ScorecardsListController < UITableViewController
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     fresh_cell.tap do |cell|
       s = @scorecards[indexPath.row]
-      cell.textLabel.text = "#{s.course[0..27]}"
-      cell.detailTextLabel.text = "#{s.time_of_day} of #{s.date}"
+      cell.textLabel.text = "#{s.course[0..22]}"
+      cell.detailTextLabel.text = "#{s.played_at}"
 
       score_label = UILabel.alloc.initWithFrame([[280, 10], [30, 30]])
       score_label.text = "#{s.strokes}"
@@ -78,17 +79,36 @@ class ScorecardsListController < UITableViewController
 
   def load_data
     SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
-    @scorecards = []
-    BW::HTTP.post(API_REGISTER_ENDPOINT, { headers: headers , payload: data } ) do |response|
+
+    BW::HTTP.get("#{App.delegate.server}/scorecards?auth_token=#{App.delegate.auth_token}" ) do |response|
       json = BW::JSON.parse(response.body.to_s)
-      json['scorecards'].each do |scorecard|
-        @scorecards << scorecard
+      json["scorecards"].each do |scorecard|
+        existing = Scorecard.find(:id, NSFEqualTo, scorecard["id"])
+        if existing.length == 0
+          puts "Creating new"
+          Scorecard.create_new(
+            scorecard["id"],
+            scorecard["course"],
+            scorecard["par"],
+            scorecard["strokes"],
+            scorecard["date"]
+          )
+        end
       end
+      @scorecards = Scorecard.all
+      self.tableView.reloadData
       SVProgressHUD.dismiss
       end_refreshing
     end
+    return true
+  end
 
-
+  def play
+    controller = CoursesController.new
+    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
+    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
+    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
+    self.presentViewController(navigationController, animated: true, completion: lambda{})
   end
 
 

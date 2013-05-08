@@ -1,5 +1,4 @@
 class RegisterController < Formotion::FormController
-  API_REGISTER_ENDPOINT = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL') + '/signup'
 
   def init
     form = Formotion::Form.new({
@@ -44,7 +43,7 @@ class RegisterController < Formotion::FormController
   def viewDidLoad
     super
 
-    self.title = "Register"
+    self.title = "Sign Up"
   end
 
   def register
@@ -59,7 +58,7 @@ class RegisterController < Formotion::FormController
       App.alert("Your password doesn't match confirmation, check again")
     else
       SVProgressHUD.showWithStatus("Registering new account...", maskType:SVProgressHUDMaskTypeGradient)
-      BW::HTTP.post(API_REGISTER_ENDPOINT, { headers: headers , payload: data } ) do |response|
+      BW::HTTP.post("#{App.delegate.server}/signup", { headers: headers , payload: data } ) do |response|
         if response.status_description.nil?
           App.alert(response.error_message)
         else

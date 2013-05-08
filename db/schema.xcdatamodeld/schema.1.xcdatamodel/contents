@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="11D50" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
   <entity name="Scorecard" representedClassName="Scorecard" syncable="YES">
-    <attribute name="date" attributeType="String" optional="YES" syncable="YES"/>
-    <attribute name="time_of_day" attributeType="String" optional="YES" syncable="YES"/>
+    <attribute name="playedAt" attributeType="String" optional="YES" syncable="YES"/>
     <attribute name="course" attributeType="String" optional="YES" syncable="YES"/>
     <attribute name="strokes" attributeType="String" optional="YES" syncable="YES"/>
-    <relationship name="player" optional="YES" deletionRule="No Action" syncable="YES" minCount="1" maxCount="1" inverseEntity="Player" destinationEntity="Player" inverseName="scorecards" toMany="NO"/>
-  </entity>
-  <entity name="Player" representedClassName="Player" syncable="YES">
-    <attribute name="name" attributeType="String" optional="YES" syncable="YES"/>
-    <attribute name="email" attributeType="String" optional="YES" syncable="YES"/>
-    <attribute name="auth_token" attributeType="String" optional="YES" syncable="YES"/>
-    <relationship name="scorecards" optional="YES" deletionRule="No Action" syncable="YES" inverseEntity="Scorecard" destinationEntity="Scorecard" inverseName="player" toMany="YES"/>
   </entity>
 </model>

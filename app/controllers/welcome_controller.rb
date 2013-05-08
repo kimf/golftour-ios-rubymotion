@@ -1,5 +1,4 @@
 class WelcomeController < Formotion::FormController
-  API_LOGIN_ENDPOINT = NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL') + '/authenticate'
 
   def init
     form = Formotion::Form.new({
@@ -35,8 +34,8 @@ class WelcomeController < Formotion::FormController
 
   def viewDidLoad
     super
-    self.title = "Simple Golftour"
-    registerButton = UIBarButtonItem.alloc.initWithTitle("Register",
+    self.title = "Login"
+    registerButton = UIBarButtonItem.alloc.initWithTitle("Sign Up",
                                                            style:UIBarButtonItemStylePlain,
                                                            target:self,
                                                            action:'register')
@@ -55,7 +54,7 @@ class WelcomeController < Formotion::FormController
 
     SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
 
-    BW::HTTP.post(API_LOGIN_ENDPOINT, { headers: headers, payload: data } ) do |response|
+    BW::HTTP.post("#{App.delegate.server}/authenticate", { headers: headers, payload: data } ) do |response|
       if response.status_description.nil?
         App.alert(response.error_message)
       else
