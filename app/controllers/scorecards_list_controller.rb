@@ -81,26 +81,26 @@ class ScorecardsListController < UITableViewController
   def load_data
     SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
 
-    BW::HTTP.get("#{App.delegate.server}/scorecards?auth_token=#{App.delegate.auth_token}" ) do |response|
-      json = BW::JSON.parse(response.body.to_s)
-      json["scorecards"].each do |scorecard|
-        existing = Scorecard.find(:id, NSFEqualTo, scorecard["id"])
-        if existing.length == 0
-          puts "Creating new"
-          Scorecard.create_new(
-            scorecard["id"],
-            scorecard["course"],
-            scorecard["par"],
-            scorecard["strokes"],
-            scorecard["date"]
-          )
-        end
-      end
+    # BW::HTTP.get("#{App.delegate.server}/scorecards?auth_token=#{App.delegate.auth_token}" ) do |response|
+    #   json = BW::JSON.parse(response.body.to_s)
+    #   json["scorecards"].each do |scorecard|
+    #     existing = Scorecard.find(:id, NSFEqualTo, scorecard["id"])
+    #     if existing.length == 0
+    #       puts "Creating new"
+    #       Scorecard.create_new(
+    #         scorecard["id"],
+    #         scorecard["course"],
+    #         scorecard["par"],
+    #         scorecard["strokes"],
+    #         scorecard["date"]
+    #       )
+    #     end
+    #   end
       @scorecards = Scorecard.all
       self.tableView.reloadData
       SVProgressHUD.dismiss
       end_refreshing
-    end
+    #end
     return true
   end
 

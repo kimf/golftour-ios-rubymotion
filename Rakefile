@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
-require 'motion/project'
+require 'motion/project/template/ios'
 require 'rubygems'
 require 'bundler'
 require 'yaml'
@@ -10,10 +10,6 @@ if ARGV.join(' ') =~ /spec/
 else
   Bundler.require
 end
-
-#specific requires from biiiig gems
-require 'bubble-wrap/http'
-require 'bubble-wrap/core'
 
 
 Motion::Project::App.setup do |app|

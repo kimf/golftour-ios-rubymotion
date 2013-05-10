@@ -36,28 +36,28 @@ class CoursesController < UITableViewController
   def reload_data
     SVProgressHUD.showWithMaskType(SVProgressHUDMaskTypeClear)
 
-    BW::HTTP.get("#{App.delegate.server}/courses?auth_token=#{App.delegate.auth_token}" ) do |response|
-      json = BW::JSON.parse(response.body.to_s)
-      json["courses"].each do |course|
-        existing = Course.find(:id, NSFEqualTo, course["id"])
-        if existing.length == 0
-          puts "Creating new"
-          new_course = Course.new(
-            id: course["id"],
-            name: course["name"],
-            par: course["par"]
-          )
-          course["holes"].each do |hole|
-            new_course.holes << Hole.create(id: hole["id"], nr: hole["nr"], par: hole["par"], hcp: hole["hcp"], length: hole["length"])
-          end
-          new_course.save
-        end
-      end
+    # BW::HTTP.get("#{App.delegate.server}/courses?auth_token=#{App.delegate.auth_token}" ) do |response|
+    #   json = BW::JSON.parse(response.body.to_s)
+    #   json["courses"].each do |course|
+    #     existing = Course.find(:id, NSFEqualTo, course["id"])
+    #     if existing.length == 0
+    #       puts "Creating new"
+    #       new_course = Course.new(
+    #         id: course["id"],
+    #         name: course["name"],
+    #         par: course["par"]
+    #       )
+    #       course["holes"].each do |hole|
+    #         new_course.holes << Hole.create(id: hole["id"], nr: hole["nr"], par: hole["par"], hcp: hole["hcp"], length: hole["length"])
+    #       end
+    #       new_course.save
+    #     end
+    #   end
       @courses = Course.all
       self.tableView.reloadData
       SVProgressHUD.dismiss
       end_refreshing
-    end
+    #end
     return true
   end
 
