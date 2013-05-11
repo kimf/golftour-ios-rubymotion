@@ -1,7 +1,7 @@
-class WelcomeController < UIViewController
+class WelcomeController < Formotion::FormController
   stylesheet :base
 
-  layout :root do
+  def init
     form = Formotion::Form.new({
       sections: [{
         rows: [{
@@ -29,21 +29,7 @@ class WelcomeController < UIViewController
     form.on_submit do
       self.login
     end
-  end
-
-  def layoutDidLoad
-    self.title = "Simple Golftour"
-    registerButton = UIBarButtonItem.alloc.initWithTitle("Sign Up",
-                                                           style:UIBarButtonItemStylePlain,
-                                                           target:self,
-                                                           action:'register')
-
-    self.navigationItem.rightBarButtonItem = registerButton
-  end
-
-  def register
-    @registerController = RegisterController.alloc.init
-    self.navigationController.pushViewController(@registerController, animated:true)
+    super.initWithForm(form)
   end
 
   def login
@@ -52,22 +38,22 @@ class WelcomeController < UIViewController
 
     SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
 
-    # BW::HTTP.post("#{App.delegate.server}/authenticate", { headers: headers, payload: data } ) do |response|
-    #   if response.status_description.nil?
-    #     App.alert(response.error_message)
-    #   else
-    #     if response.ok?
-    #       json = BW::JSON.parse(response.body.to_s)
-    #       App::Persistence['authToken'] = json['data']['auth_token']
-    #       self.navigationController.dismissModalViewControllerAnimated(true)
-    #       ScorecardsListController.controller.load_data
-    #     elsif response.status_code.to_s =~ /40\d/
-    #       App.alert("Login failed")
-    #     else
-    #       App.alert(response.to_s)
-    #     end
-    #   end
-    #   SVProgressHUD.dismiss
-    # end
+    BW::HTTP.post("#{App.delegate.server}/authenticate", { headers: headers, payload: data } ) do |response|
+      if response.status_description.nil?
+        App.alert(response.error_message)
+      else
+        if response.ok?
+          json = BW::JSON.parse(response.body.to_s)
+          App::Persistence['authToken'] = json['data']['auth_token']
+          self.navigationController.dismissModalViewControllerAnimated(true)
+          DashboardController.controller.load_data
+        elsif response.status_code.to_s =~ /40\d/
+          App.alert("Login failed")
+        else
+          App.alert(response.to_s)
+        end
+      end
+      SVProgressHUD.dismiss
+    end
   end
 end

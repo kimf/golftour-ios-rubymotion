@@ -1,7 +1,5 @@
 Teacup::Stylesheet.new :scorecards_sheet do
 
-  # style :root,
-  #   backgroundColor: "#69666f".to_color
 
   style :table,
     backgroundColor: UIColor.colorWithRed(50.0/255, green: 57.0/255, blue: 73.0/255, alpha:1),

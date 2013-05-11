@@ -51,6 +51,4 @@ Motion::Project::App.setup do |app|
       app.seed_id = config['release']['seed_id']
     end
   end
-
-  puts app.info_plist['API_URL']
 end

@@ -1,0 +1,3 @@
+exit
+Course.all.each{|c| c.delete }
+Course.all.each{|c| c.delete }

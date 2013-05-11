@@ -1,0 +1,7 @@
+exit
+Player.all
+Player.first
+Player.all.select{|p| p.name == "Jacqline Runsten"}.first.delete
+Player.all.select{|p| p.name == "Jacqline Runsten"}.first.delete
+Player.all.select{|p| p.name == "Jacqline Runsten"}.first.delete
+Player.all.select{|p| p.name == "Jacqline Runsten"}.first.delete
