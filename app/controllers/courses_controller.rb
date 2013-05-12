@@ -124,7 +124,7 @@ class CoursesController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    controller = PlayController.new
+    controller = PlayController.controller
     controller.course_id = courses[indexPath.row].id
     self.navigationController.pushViewController(controller, animated: true)
   end

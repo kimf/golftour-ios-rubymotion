@@ -55,16 +55,25 @@ class NewPlayerController < Formotion::FormController
     headers = { 'Content-Type' => 'application/json' }
     data = BW::JSON.generate({name:   name, email:  email, hcp: hcp})
 
-    BW::HTTP.post("#{App.delegate.server}/players", { headers: headers, payload: data } ) do |response|
+    BW::HTTP.post("#{App.delegate.server}/players",
+      { headers: headers, payload: data } ) do |response|
       if response.status_description.nil?
         App.alert(response.error_message)
       else
-        if response.ok?
-          json = BW::JSON.parse(response.body.to_s)
-          @player = Player.create(name: name, email: email, hcp: hcp, id: json["player"]["id"])
-          self.navigationController.dismissModalViewControllerAnimated(true)
-        elsif response.status_code.to_s =~ /40\d/
-          App.alert("Save Failed")
+        json = BW::JSON.parse(response.body.to_s)
+        if response.status_code == 200
+          player = json["player"]
+          Player.create(
+            id: player["id"].to_i,
+            name: player["name"],
+            points: player["points"].to_i,
+            rounds: player["rounds"].to_i,
+            average_points: player["average_points"].to_i,
+            hcp: player["hcp"],
+            email: player["email"]
+          )
+          self.close
+          PlayController.controller.reload_players
         else
           App.alert(json['info'])
         end

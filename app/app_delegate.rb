@@ -14,11 +14,11 @@ class AppDelegate
     @window.rootViewController ||= @navigationController
     @window.makeKeyAndVisible
 
-    @login = WelcomeController.alloc.init
-    @login_navigation = UINavigationController.alloc.initWithRootViewController(@login)
+    # @login = WelcomeController.alloc.init
+    # @login_navigation = UINavigationController.alloc.initWithRootViewController(@login)
 
-    @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
-    @login.title = "Simple Golftour"
+    # @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
+    # @login.title = "Simple Golftour"
 
     # if App::Persistence['authToken'].nil?
     #   DashboardController.controller.presentModalViewController(@login_navigation, animated:false)

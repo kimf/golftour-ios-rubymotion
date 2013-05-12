@@ -2,6 +2,10 @@ class PlayController < UITableViewController
   stylesheet :scorecards_sheet
   attr_accessor :course_id, :course, :players, :selected_players
 
+  def self.controller
+    @controller ||= PlayController.alloc.initWithNibName(nil, bundle: nil)
+  end
+
   layout :table do
     self.course = Course.find(:id, NSFEqualTo, self.course_id).first
     self.title = "Välj spelare"
@@ -10,17 +14,23 @@ class PlayController < UITableViewController
     self.navigationItem.rightBarButtonItem = newButton
   end
 
-  def init
+
+  def reload_players
     @players = Player.all({:sort => {:name => :desc}})
-    @selected_players = []
+    self.tableView.reloadData
+  end
+
+  def init
     super
+    reload_players
   end
 
   def viewDidLoad
     super
+    reload_players
+    @selected_players = []
     layout tableView, :table
     tableView.rowHeight = 40
-    @players = Player.all({:sort => {:name => :desc}})
     self.tableView.reloadData
   end
 
@@ -28,7 +38,7 @@ class PlayController < UITableViewController
     controller = NewPlayerController.new
     navigationController = UINavigationController.alloc.initWithRootViewController(controller)
     navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
+    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
     self.presentViewController(navigationController, animated: true, completion: lambda{})
   end
 
