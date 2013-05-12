@@ -1,5 +1,5 @@
 class CoursesController < UITableViewController
-  stylesheet :scorecards_sheet
+  stylesheet :table
   include Refreshable
 
   attr_accessor :courses, :filtered_courses, :isFiltered
@@ -63,40 +63,42 @@ class CoursesController < UITableViewController
   end
 
   def reload_data
-    SVProgressHUD.showWithStatus("Uppdaterar banor", maskType:SVProgressHUDMaskTypeGradient)
     if @isFiltered
       end_refreshing
-      SVProgressHUD.dismiss
       return true
     end
-    BW::HTTP.get("#{App.delegate.server}/courses?auth_token=#{App.delegate.auth_token}" ) do |response|
-      json = BW::JSON.parse(response.body.to_s)
-      json["courses"].each do |course|
-        existing_course = Course.find(:id, NSFEqualTo, course["id"]).first
-        if !existing_course
-          puts "Creating new"
-          Course.create(
-            id:           course["id"],
-            name:         course["name"],
-            par:          course["par"],
-            index:        course["index"],
-            has_gps:      course["has_gps"],
-            holes_count:  course["holes_count"]
-          )
-        else
-          existing_course.name        = course["name"]
-          existing_course.par         = course["par"]
-          existing_course.index       = course["index"]
-          existing_course.has_gps     = course["has_gps"]
-          existing_course.holes_count = course["holes_count"]
-          existing_course.save
+
+    AFMotion::Client.shared.get("courses?auth_token=#{App.delegate.auth_token}") do |result|
+      if result.success?
+        result.object["courses"].each do |course|
+          existing_course = Course.find(:id, NSFEqualTo, course["id"]).first
+          if !existing_course
+            puts "Creating new"
+            Course.create(
+              id:           course["id"],
+              name:         course["name"],
+              par:          course["par"],
+              index:        course["index"],
+              has_gps:      course["has_gps"],
+              holes_count:  course["holes_count"]
+            )
+          else
+            existing_course.name        = course["name"]
+            existing_course.par         = course["par"]
+            existing_course.index       = course["index"]
+            existing_course.has_gps     = course["has_gps"]
+            existing_course.holes_count = course["holes_count"]
+            existing_course.save
+          end
         end
+        @courses = Course.all({:sort => {:name => :asc}})
+        self.tableView.reloadData
+      elsif result.failure?
+        App.alert(result.error.localizedDescription)
       end
-      @courses = Course.all({:sort => {:name => :asc}})
-      self.tableView.reloadData
-      SVProgressHUD.dismiss
       end_refreshing
     end
+
     return true
   end
 
@@ -134,7 +136,6 @@ class CoursesController < UITableViewController
       tableView.dequeueReusableCellWithIdentifier('Cell') ||
       UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:'Cell').tap do |cell|
         layout cell, :cell do
-          subview(UIView, :top_line)
           subview(UIView, :bottom_line)
         end
 

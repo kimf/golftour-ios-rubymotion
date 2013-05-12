@@ -1,14 +1,20 @@
 PODS:
+  - AFNetworking (1.2.1)
   - NanoStore (2.6.4)
+  - Reachability (3.1.0)
   - SVProgressHUD (0.9)
 
 DEPENDENCIES:
+  - AFNetworking
   - NanoStore
   - NanoStore (~> 2.6.0)
+  - Reachability
   - SVProgressHUD
 
 SPEC CHECKSUMS:
+  AFNetworking: 616da0028916ce296f5c3cef74e5552eb4e10e13
   NanoStore: 73d29e30e1e7f253f719c6ad1d60181ebcf1b5be
+  Reachability: ba94ecd4eaa037be3d0588b38956672588530c5b
   SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
 
 COCOAPODS: 0.19.1

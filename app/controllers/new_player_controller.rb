@@ -52,33 +52,23 @@ class NewPlayerController < Formotion::FormController
     email = form.render[:email]
     hcp = form.render[:hcp]
 
-    headers = { 'Content-Type' => 'application/json' }
-    data = BW::JSON.generate({name:   name, email:  email, hcp: hcp})
-
-    BW::HTTP.post("#{App.delegate.server}/players",
-      { headers: headers, payload: data } ) do |response|
-      if response.status_description.nil?
-        App.alert(response.error_message)
-      else
-        json = BW::JSON.parse(response.body.to_s)
-        if response.status_code == 200
-          player = json["player"]
-          Player.create(
-            id: player["id"].to_i,
-            name: player["name"],
-            points: player["points"].to_i,
-            rounds: player["rounds"].to_i,
-            average_points: player["average_points"].to_i,
-            hcp: player["hcp"],
-            email: player["email"]
-          )
-          self.close
-          PlayController.controller.reload_players
-        else
-          App.alert(json['info'])
-        end
+    AFMotion::Client.shared.post("players", name: name, email: email, hcp: hcp) do |result|
+      if result.success?
+        player = result.object["player"]
+        Player.create(
+          id: player["id"].to_i,
+          name: player["name"],
+          points: player["points"].to_i,
+          rounds: player["rounds"].to_i,
+          average_points: player["average_points"].to_i,
+          hcp: player["hcp"],
+          email: player["email"]
+        )
+        self.close
+        PlayController.controller.reload_players
+      elsif result.failure?
+        App.alert("Kunde inte spara...")
       end
-      SVProgressHUD.dismiss
     end
   end
 end

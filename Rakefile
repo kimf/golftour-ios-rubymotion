@@ -25,6 +25,8 @@ Motion::Project::App.setup do |app|
   app.pods do
     pod 'SVProgressHUD'
     pod 'NanoStore'
+    pod 'AFNetworking'
+    pod 'Reachability'
   end
 
   if File.exists?('./config.yml')

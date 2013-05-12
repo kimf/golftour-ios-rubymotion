@@ -2,13 +2,22 @@ class AppDelegate
   attr_reader :window
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    #SETUP DB
     NanoStore.shared_store ||= NanoStore.store(:file, App.documents_path + "/nano.db")
+
+    #SETUP AFMOTION NETWORK CLIENT
+    AFNetworkActivityIndicatorManager.sharedManager.enabled=true
+    AFMotion::Client.build_shared(NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')) do
+      header "Accept", "application/json"
+      operation :json
+    end
 
     @window ||= UIWindow.alloc.initWithFrame(
       UIScreen.mainScreen.bounds, cornerRadius: 5, masksToBounds: true
     )
 
     @navigationController ||= UINavigationController.alloc.initWithRootViewController(DashboardController.controller)
+    @navigationController.navigationBar.tintColor = UIColor.clearColor
     @navigationController.navigationBar.tintColor = "#1b8ad4".to_color
 
     @window.rootViewController ||= @navigationController
@@ -16,9 +25,8 @@ class AppDelegate
 
     # @login = WelcomeController.alloc.init
     # @login_navigation = UINavigationController.alloc.initWithRootViewController(@login)
-
-    # @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
     # @login.title = "Simple Golftour"
+    # @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
 
     # if App::Persistence['authToken'].nil?
     #   DashboardController.controller.presentModalViewController(@login_navigation, animated:false)
@@ -27,16 +35,11 @@ class AppDelegate
     true
   end
 
-
-  def server
-    NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')
-  end
-
   def auth_token
     "" #App::Persistence['authToken'].nil? ? "" : App::Persistence['authToken']
   end
 
-  def is_authenticated
+  def is_authenticated?
     true
     #App::Persistence['authToken'].nil? ? false : true
   end

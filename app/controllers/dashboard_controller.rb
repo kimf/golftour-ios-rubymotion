@@ -1,7 +1,7 @@
 class DashboardController < UITableViewController
   include Refreshable
 
-  stylesheet :scorecards_sheet
+  stylesheet :table
 
   attr_accessor :players
 
@@ -11,12 +11,12 @@ class DashboardController < UITableViewController
 
   layout :table do
     self.title = "Simple Golftour"
-    @players = []
     playButton = UIBarButtonItem.alloc.initWithTitle("Spela!", style: UIBarButtonItemStylePlain, target:self, action:'play')
     self.navigationItem.rightBarButtonItem = playButton
   end
 
   def viewDidLoad
+    @players = Player.all({:sort => {:points => :desc}})
     layout tableView, :table
     tableView.rowHeight = 60
 
@@ -34,10 +34,6 @@ class DashboardController < UITableViewController
     @players.count || 0
   end
 
-  def tableView(tableView, titleForHeaderInSection:section)
-    "Ledartavla"
-  end
-
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     fresh_cell.tap do |cell|
       p = @players[indexPath.row]
@@ -46,7 +42,7 @@ class DashboardController < UITableViewController
 
       score_label = UILabel.alloc.initWithFrame([[250, 10], [60, 30]])
       score_label.text = "#{p.points}"
-      score_label.backgroundColor = UIColor.colorWithRed(62.0/255, green: 69.0/255, blue: 95.0/255, alpha:1)
+      score_label.backgroundColor = "#444444".to_color
       score_label.textColor = UIColor.whiteColor
       score_label.textAlignment = NSTextAlignmentCenter
       score_label.layer.cornerRadius = 4
@@ -60,23 +56,11 @@ class DashboardController < UITableViewController
   #   rvc.scorecard = scorecards[indexPath.row]
   # end
 
-  def tableView(tableView, viewForHeaderInSection:section)
-    view = UIView.alloc.initWithFrame([[0, 0], [320, 30]])
-    layout(view, :header) do
-      subview(UIView, :bottom_line)
-      label = subview(UILabel, :header_label)
-      label.text = tableView(tableView, titleForHeaderInSection:section)
-    end
-    view
-  end
-
 
   def load_data
-    if App.delegate.is_authenticated
-      SVProgressHUD.showWithStatus("Uppdaterar ledartavla", maskType:SVProgressHUDMaskTypeGradient)
-      BW::HTTP.get("#{App.delegate.server}/players?auth_token=#{App.delegate.auth_token}" ) do |response|
-        json = BW::JSON.parse(response.body.to_s)
-        json["players"].each do |player|
+    AFMotion::Client.shared.get("players?auth_token=#{App.delegate.auth_token}") do |result|
+      if result.success?
+        result.object["players"].each do |player|
           existing_player = Player.find(:id, NSFEqualTo, player["id"]).first
           if !existing_player
             puts "Creating new"
@@ -99,15 +83,17 @@ class DashboardController < UITableViewController
             existing_player.save
           end
         end
-
         @players = Player.all({:sort => {:points => :desc}})
         self.tableView.reloadData
-        SVProgressHUD.dismiss
-        end_refreshing
+      elsif result.failure?
+        App.alert(result.error.localizedDescription)
       end
+      end_refreshing
     end
+
     return true
   end
+
 
   def play
     controller = CoursesController.new
@@ -123,7 +109,6 @@ class DashboardController < UITableViewController
       tableView.dequeueReusableCellWithIdentifier('Cell') ||
       UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:'Cell').tap do |cell|
         layout cell, :cell do
-          subview(UIView, :top_line)
           subview(UIView, :bottom_line)
         end
 
