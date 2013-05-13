@@ -1,24 +1,21 @@
-class PlayController < UITableViewController
+class PlayersController < UITableViewController
   stylesheet :table
-  attr_accessor :course, :players, :selected_players
-
-  def self.controller
-    @controller ||= PlayController.alloc.initWithNibName(nil, bundle: nil)
-  end
+  attr_accessor :players, :selected_players
 
   layout :table do
-    self.title = "Go Play"
-
-    @selected_players = []
-    reload_players
+    self.title = "Välj spelare"
 
     newButton = UIBarButtonItem.alloc.initWithTitle("+", style: UIBarButtonItemStylePlain, target:self, action:'new')
     self.navigationItem.rightBarButtonItem = newButton
 
-    @play_button = subview(UIButton, :play_button)
-    @play_button.when_tapped do
-      play
-    end
+    subview(UIButton, :play_button).on(:touch){ play }
+  end
+
+  def viewWillAppear(animated)
+    super
+    App::Persistence['current_player_ids'] = nil
+    @selected_players = []
+    reload_players
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
@@ -40,31 +37,20 @@ class PlayController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     toggle_player(@players[indexPath.row])
-    if @selected_players.length > 0
-      @play_button.hidden = false
-    else
-      @play_button.hidden = true
-    end
   end
 
 
   def new
-    controller = NewPlayerController.new
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
+    App.delegate.router.open("new_player", true)
   end
 
 
   def play
-    controller = PlayingController.alloc.init
-    controller.course = @course
-    controller.players = @selected_players
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
+    if @selected_players.length < 1
+      App.alert("Du måste välja minst en spelare")
+    else
+      App.delegate.router.open("playing", true)
+    end
   end
 
   def reload_players
@@ -79,6 +65,7 @@ class PlayController < UITableViewController
     else
       @selected_players.delete(player)
     end
+    App::Persistence['current_player_ids'] = @selected_players.map(&:id)
     self.tableView.reloadData
   end
 

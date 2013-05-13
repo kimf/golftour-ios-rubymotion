@@ -1,9 +1,9 @@
 class AppDelegate
-  attr_reader :window
+  attr_reader :window, :router, :store
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     #SETUP DB
-    NanoStore.shared_store ||= NanoStore.store(:file, App.documents_path + "/nano.db")
+    @store = NanoStore.shared_store ||= NanoStore.store(:file, App.documents_path + "/nano.db")
 
     #SETUP AFMOTION NETWORK CLIENT
     AFNetworkActivityIndicatorManager.sharedManager.enabled=true
@@ -12,34 +12,51 @@ class AppDelegate
       operation :json
     end
 
-    @window ||= UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-
-    @tabBarController = UITabBarController.alloc.init
-
-    @tabBarController.viewControllers = [
-      LeaderboardController.alloc.init,
-      PlayController.alloc.init
-    ]
-
-    @tabBarController.selectedIndex = 0
-
-    @navigationController ||= UINavigationController.alloc.initWithRootViewController(@tabBarController)
-    @navigationController.navigationBar.tintColor = UIColor.clearColor
-    @navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-
-    @window.rootViewController ||= @navigationController
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     @window.makeKeyAndVisible
 
-    # @login = WelcomeController.alloc.init
-    # @login_navigation = UINavigationController.alloc.initWithRootViewController(@login)
-    # @login.title = "Simple Golftour"
-    # @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
+    map_urls
 
-    # if App::Persistence['authToken'].nil?
-    #   @navigationController.controller.presentModalViewController(@login_navigation, animated:false)
-    # end
-
+    # .open(url, animated)
+    if self.is_authenticated?
+      @router.open("leaderboard", false)
+    else
+      @router.open("login", false)
+    end
     true
+  end
+
+  def map_urls
+    @router = Routable::Router.router
+    @router.navigation_controller = UINavigationController.alloc.init
+
+    # :modal means we push it modally.
+    @router.map("login", LoginController, modal: true)
+    @router.map("register", RegisterController, shared: true)
+
+    # :shared means it will only keep one instance of this VC in the hierarchy;
+    # if we push it again later, it will pop any covering VCs.
+    @router.map("leaderboard", LeaderboardController, shared: true)
+
+    @router.map("courses", CoursesController, shared: true)
+    @router.map("new_course", NewCourseController, modal: true)
+
+    @router.map("players", PlayersController)
+    @router.map("new_player", NewPlayerController, modal: true)
+
+    @router.map("playing", PlayingController, resets: true)
+    @router.map("scorecard", ScorecardController, modal: true)
+
+    @router.map("back_to_leaderboard", LeaderboardController, resets: true)
+
+
+    # can also route arbitrary blocks of code
+    @router.map("logout") do
+      App::Persistence['authToken'] = nil
+      @router.open("login")
+    end
+
+    @window.rootViewController = @router.navigation_controller
   end
 
   def auth_token

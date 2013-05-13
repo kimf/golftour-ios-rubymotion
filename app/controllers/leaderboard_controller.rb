@@ -8,6 +8,9 @@ class LeaderboardController < UITableViewController
   layout :table do
     self.title = "Leaderboard"
     @players = Player.all({:sort => {:points => :desc}})
+
+    newButton = UIBarButtonItem.alloc.initWithTitle("PLAY", style: UIBarButtonItemStylePlain, target:self, action:'play')
+    self.navigationItem.rightBarButtonItem = newButton
     load_data
 
     on_refresh do
@@ -28,6 +31,10 @@ class LeaderboardController < UITableViewController
     end
   end
 
+
+  def play
+    App.delegate.router.open("courses", true)
+  end
 
   def load_data
     AFMotion::Client.shared.get("players?auth_token=#{App.delegate.auth_token}") do |result|

@@ -1,15 +1,14 @@
 class NewPlayerController < Formotion::FormController
-  stylesheet :base
   attr_accessor :player, :name, :email, :hcp
 
   layout :root do
-    self.title = "New Course"
-    closeButton = UIBarButtonItem.alloc.initWithTitle("Close", style: UIBarButtonItemStylePlain, target:self, action:'close')
+    self.title = "New Player"
+    closeButton = UIBarButtonItem.alloc.initWithTitle("Cancel", style: UIBarButtonItemStylePlain, target:self, action:'cancel')
     self.navigationItem.leftBarButtonItem = closeButton
   end
 
-  def close
-    navigationController.dismissViewControllerAnimated(true, completion: lambda{})
+  def cancel
+    App.delegate.router.pop
   end
 
   def init
@@ -64,8 +63,7 @@ class NewPlayerController < Formotion::FormController
           hcp: player["hcp"],
           email: player["email"]
         )
-        self.close
-        PlayController.controller.reload_players
+        App.delegate.router.pop
       elsif result.failure?
         App.alert("Kunde inte spara...")
       end

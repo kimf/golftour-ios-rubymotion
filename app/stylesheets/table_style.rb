@@ -9,9 +9,10 @@ Teacup::Stylesheet.new :table do
 
   style :cell,
     textColor: "#2b2c2e".to_color,
+    font: 'OpenSans-Semibold'.uifont(16),
     detailTextLabel: {
       textColor: "#2b2c2e".to_color,
-      font: UIFont.boldSystemFontOfSize(20)
+      font: 'OpenSans-Bold'.uifont(16),
     }
 
   style :selected,
@@ -33,5 +34,5 @@ Teacup::Stylesheet.new :table do
     backgroundColor: "#68a15f".to_color,
     textColor: "#FFFFFF".to_color,
     title: "Starta Runda!",
-    hidden: true
+    font: 'OpenSans-Bold'.uifont(20)
 end

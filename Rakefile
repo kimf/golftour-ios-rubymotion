@@ -11,6 +11,7 @@ else
   Bundler.require
 end
 
+require 'sugarcube-gestures'
 
 Motion::Project::App.setup do |app|
 

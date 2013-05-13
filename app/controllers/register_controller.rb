@@ -65,9 +65,7 @@ class RegisterController < Formotion::FormController
           json = BW::JSON.parse(response.body.to_s)
           if response.status_code == 200
             App::Persistence['authToken'] = json['data']['auth_token']
-            App.alert(json['info'])
-            self.navigationController.dismissModalViewControllerAnimated(true)
-            ScorecardsListController.controller.load_data
+            @router.open("leaderboard", false)
           else
             App.alert(json['info'])
           end

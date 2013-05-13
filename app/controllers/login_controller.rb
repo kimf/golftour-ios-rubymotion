@@ -1,4 +1,4 @@
-class WelcomeController < Formotion::FormController
+class LoginController < Formotion::FormController
   stylesheet :base
 
   def init
@@ -45,8 +45,7 @@ class WelcomeController < Formotion::FormController
         if response.ok?
           json = BW::JSON.parse(response.body.to_s)
           App::Persistence['authToken'] = json['data']['auth_token']
-          self.navigationController.dismissModalViewControllerAnimated(true)
-          LeaderboardController.controller.load_data
+          @router.open("leaderboard", false)
         elsif response.status_code.to_s =~ /40\d/
           App.alert("Login failed")
         else

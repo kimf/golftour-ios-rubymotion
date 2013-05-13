@@ -1,35 +1,25 @@
 class CoursesController < UITableViewController
-  stylesheet :table
   include Refreshable
+
+  stylesheet :table
 
   attr_accessor :courses, :filtered_courses, :isFiltered
 
   layout :table do
     self.title = "Välj bana"
-    closeButton = UIBarButtonItem.alloc.initWithTitle("Avbryt", style: UIBarButtonItemStylePlain, target:self, action:'close')
+    @search_results = []
+    @filtered_courses = []
+    @courses = Course.all({:sort => {:name => :asc}})
+
+    closeButton = UIBarButtonItem.alloc.initWithTitle("Avbryt", style: UIBarButtonItemStylePlain, target:self, action:'cancel')
     self.navigationItem.leftBarButtonItem = closeButton
-  end
-
-  def init
-    @courses = []
-    super
-  end
-
-  def viewDidLoad
-    super
-    layout tableView, :table
-    tableView.rowHeight = 40
 
     search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
     search_bar.delegate = self
-
     view.addSubview(search_bar)
     view.tableHeaderView = search_bar
-    @search_results = []
 
-    @courses = Course.all({:sort => {:name => :asc}})
     reload_data if @courses.length == 0
-
     on_refresh do
       reload_data
     end
@@ -67,33 +57,47 @@ class CoursesController < UITableViewController
       end_refreshing
       return true
     end
+    SVProgressHUD.showWithStatus("Laddar ner banor och hål. Kommer ta ett tag!", maskType:SVProgressHUDMaskTypeGradient)
+    App.delegate.store.save_interval = 10000
 
     AFMotion::Client.shared.get("courses?auth_token=#{App.delegate.auth_token}") do |result|
       if result.success?
         result.object["courses"].each do |course|
-          existing_course = Course.find(:id, NSFEqualTo, course["id"]).first
-          if !existing_course
-            puts "Creating new"
-            Course.create(
-              id:           course["id"],
-              name:         course["name"],
-              par:          course["par"],
-              index:        course["index"],
-              has_gps:      course["has_gps"],
-              holes_count:  course["holes_count"]
-            )
-          else
-            existing_course.name        = course["name"]
-            existing_course.par         = course["par"]
-            existing_course.index       = course["index"]
-            existing_course.has_gps     = course["has_gps"]
-            existing_course.holes_count = course["holes_count"]
-            existing_course.save
+          existing_course = Course.find(:id, NSFEqualTo, course["id"]).first || Course.new
+          existing_course.id          = course["id"]
+          existing_course.name        = course["name"]
+          existing_course.par         = course["par"]
+          existing_course.index       = course["index"]
+          existing_course.has_gps     = course["has_gps"]
+          existing_course.holes_count = course["holes_count"]
+          App.delegate.store          << existing_course
+
+          if course["holes"] && course["holes"].length > 0
+            course["holes"].each do |hole|
+              existing_hole = Hole.find(:id, NSFEqualTo, hole["id"]).first || Hole.new
+              existing_hole.course_id  = course["id"]
+              existing_hole.id         = hole["id"]
+              existing_hole.nr         = hole["nr"]
+              existing_hole.par        = hole["par"]
+              existing_hole.length     = hole["length"]
+              existing_hole.hcp        = hole["hcp"]
+              existing_hole.lat        = hole["lat"]
+              existing_hole.lng        = hole["lng"]
+              App.delegate.store       << existing_hole
+            end
           end
+
         end
+
+        App.delegate.store.save
+        App.delegate.store.save_interval = 1
+
         @courses = Course.all({:sort => {:name => :asc}})
         self.tableView.reloadData
+
+        SVProgressHUD.dismiss
       elsif result.failure?
+        SVProgressHUD.dismiss
         App.alert(result.error.localizedDescription)
       end
       end_refreshing
@@ -102,16 +106,12 @@ class CoursesController < UITableViewController
     return true
   end
 
-  def close
-    navigationController.dismissViewControllerAnimated(true, completion: lambda{})
+  def cancel
+    App.delegate.router.open("leaderboard")
   end
 
   def new
-    controller = NewCourseController.new
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
+    App.delegate.router.open("new_course")
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -126,9 +126,8 @@ class CoursesController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    controller = PlayController.controller
-    controller.course_id = courses[indexPath.row].id
-    self.navigationController.pushViewController(controller, animated: true)
+    App::Persistence['current_course_id'] = courses[indexPath.row].id
+    App.delegate.router.open("players")
   end
 
   private
