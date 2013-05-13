@@ -12,11 +12,18 @@ class AppDelegate
       operation :json
     end
 
-    @window ||= UIWindow.alloc.initWithFrame(
-      UIScreen.mainScreen.bounds, cornerRadius: 5, masksToBounds: true
-    )
+    @window ||= UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
-    @navigationController ||= UINavigationController.alloc.initWithRootViewController(DashboardController.controller)
+    @tabBarController = UITabBarController.alloc.init
+
+    @tabBarController.viewControllers = [
+      LeaderboardController.alloc.init,
+      PlayController.alloc.init
+    ]
+
+    @tabBarController.selectedIndex = 0
+
+    @navigationController ||= UINavigationController.alloc.initWithRootViewController(@tabBarController)
     @navigationController.navigationBar.tintColor = UIColor.clearColor
     @navigationController.navigationBar.tintColor = "#1b8ad4".to_color
 
@@ -29,7 +36,7 @@ class AppDelegate
     # @login_navigation.navigationBar.tintColor = "#1b8ad4".to_color
 
     # if App::Persistence['authToken'].nil?
-    #   DashboardController.controller.presentModalViewController(@login_navigation, animated:false)
+    #   @navigationController.controller.presentModalViewController(@login_navigation, animated:false)
     # end
 
     true

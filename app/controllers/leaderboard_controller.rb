@@ -1,32 +1,18 @@
-class DashboardController < UITableViewController
+class LeaderboardController < UITableViewController
   include Refreshable
 
   stylesheet :table
 
   attr_accessor :players
 
-  def self.controller
-    @controller ||= DashboardController.alloc.initWithNibName(nil, bundle: nil)
-  end
-
   layout :table do
-    self.title = "Simple Golftour"
-    playButton = UIBarButtonItem.alloc.initWithTitle("Spela!", style: UIBarButtonItemStylePlain, target:self, action:'play')
-    self.navigationItem.rightBarButtonItem = playButton
-  end
-
-  def viewDidLoad
+    self.title = "Leaderboard"
     @players = Player.all({:sort => {:points => :desc}})
-    layout tableView, :table
-    tableView.rowHeight = 60
-
     load_data
 
     on_refresh do
       load_data
     end
-
-    super
   end
 
 
@@ -38,23 +24,9 @@ class DashboardController < UITableViewController
     fresh_cell.tap do |cell|
       p = @players[indexPath.row]
       cell.textLabel.text = "#{p.name}"
-      cell.detailTextLabel.text = "#{p.average_points}p i snitt på #{p.rounds} rundor"
-
-      score_label = UILabel.alloc.initWithFrame([[250, 10], [60, 30]])
-      score_label.text = "#{p.points}"
-      score_label.backgroundColor = "#444444".to_color
-      score_label.textColor = UIColor.whiteColor
-      score_label.textAlignment = NSTextAlignmentCenter
-      score_label.layer.cornerRadius = 4
-      cell.contentView.addSubview(score_label)
+      cell.detailTextLabel.text = "#{p.points}"
     end
   end
-
-
-  # def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-  #   player_controller = ScorecardViewController.alloc.init
-  #   rvc.scorecard = scorecards[indexPath.row]
-  # end
 
 
   def load_data
@@ -94,22 +66,13 @@ class DashboardController < UITableViewController
     return true
   end
 
-
-  def play
-    controller = CoursesController.new
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
-  end
-
-
   private
     def fresh_cell
       tableView.dequeueReusableCellWithIdentifier('Cell') ||
-      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:'Cell').tap do |cell|
+      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:'Cell').tap do |cell|
         layout cell, :cell do
           subview(UIView, :bottom_line)
+          subview(UILabel, :points_label)
         end
 
         cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))

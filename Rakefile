@@ -16,7 +16,7 @@ Motion::Project::App.setup do |app|
 
   app.name = 'Golftour'
   app.sdk_version = "6.1"
-  app.device_family = :iphone
+  app.device_family = [:iphone, :ipad]
 
 
   app.files = (app.files - Dir.glob('./app/**/*.rb')) + Dir.glob("./lib/**/*.rb") + Dir.glob("./config/**/*.rb") + Dir.glob("./app/**/*.rb")

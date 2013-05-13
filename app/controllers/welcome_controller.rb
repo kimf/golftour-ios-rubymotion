@@ -46,7 +46,7 @@ class WelcomeController < Formotion::FormController
           json = BW::JSON.parse(response.body.to_s)
           App::Persistence['authToken'] = json['data']['auth_token']
           self.navigationController.dismissModalViewControllerAnimated(true)
-          DashboardController.controller.load_data
+          LeaderboardController.controller.load_data
         elsif response.status_code.to_s =~ /40\d/
           App.alert("Login failed")
         else

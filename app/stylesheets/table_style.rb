@@ -5,14 +5,14 @@ Teacup::Stylesheet.new :table do
 
   style :table,
     backgroundColor: "#d7dee6".to_color,
-    separatorStyle: UITableViewCellSeparatorStyleNone,
-    sectionHeaderHeight: 30
+    separatorStyle: UITableViewCellSeparatorStyleNone
 
   style :cell,
-    textColor: "#2b2c2e".to_color
-
-  style :detailTextLabel,
-    textColor: "#7f8389".to_color
+    textColor: "#2b2c2e".to_color,
+    detailTextLabel: {
+      textColor: "#2b2c2e".to_color,
+      font: UIFont.boldSystemFontOfSize(20)
+    }
 
   style :selected,
     backgroundColor: "#1b8ad4".to_color
@@ -24,6 +24,7 @@ Teacup::Stylesheet.new :table do
     backgroundColor: "#cccccc".to_color,
     autoresizingMask: UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth
 
+
   style :play_button,
     top: 440,
     left: 0,
@@ -33,5 +34,4 @@ Teacup::Stylesheet.new :table do
     textColor: "#FFFFFF".to_color,
     title: "Starta Runda!",
     hidden: true
-
 end

@@ -1,16 +1,18 @@
 class PlayController < UITableViewController
   stylesheet :table
-  attr_accessor :course_id, :course, :players, :selected_players, :play_button
+  attr_accessor :course, :players, :selected_players
 
   def self.controller
     @controller ||= PlayController.alloc.initWithNibName(nil, bundle: nil)
   end
 
   layout :table do
-    @course = Course.find(:id, NSFEqualTo, self.course_id).first
-    self.title = "Välj spelare"
+    self.title = "Go Play"
 
-    newButton = UIBarButtonItem.alloc.initWithTitle("+ NY", style: UIBarButtonItemStylePlain, target:self, action:'new')
+    @selected_players = []
+    reload_players
+
+    newButton = UIBarButtonItem.alloc.initWithTitle("+", style: UIBarButtonItemStylePlain, target:self, action:'new')
     self.navigationItem.rightBarButtonItem = newButton
 
     @play_button = subview(UIButton, :play_button)
@@ -18,46 +20,6 @@ class PlayController < UITableViewController
       play
     end
   end
-
-
-  def reload_players
-    @players = Player.all({:sort => {:name => :desc}})
-    self.tableView.reloadData
-  end
-
-  def init
-    super
-    reload_players
-  end
-
-  def viewDidLoad
-    super
-    reload_players
-    @selected_players = []
-    layout tableView, :table
-    tableView.rowHeight = 40
-    self.tableView.reloadData
-  end
-
-  def new
-    controller = NewPlayerController.new
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
-  end
-
-
-  def play
-    controller = PlayingController.alloc.init
-    controller.course = @course
-    controller.players = @selected_players
-    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
-    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-    navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
-    self.presentViewController(navigationController, animated: true, completion: lambda{})
-  end
-
 
   def tableView(tableView, numberOfRowsInSection:section)
     @players.count || 0
@@ -83,6 +45,31 @@ class PlayController < UITableViewController
     else
       @play_button.hidden = true
     end
+  end
+
+
+  def new
+    controller = NewPlayerController.new
+    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
+    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
+    navigationController.modalTransitionStyle = UIModalTransitionStyleCoverVertical
+    self.presentViewController(navigationController, animated: true, completion: lambda{})
+  end
+
+
+  def play
+    controller = PlayingController.alloc.init
+    controller.course = @course
+    controller.players = @selected_players
+    navigationController = UINavigationController.alloc.initWithRootViewController(controller)
+    navigationController.navigationBar.tintColor = "#1b8ad4".to_color
+    navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal
+    self.presentViewController(navigationController, animated: true, completion: lambda{})
+  end
+
+  def reload_players
+    @players = Player.all({:sort => {:name => :desc}})
+    self.tableView.reloadData
   end
 
   def toggle_player(player)
