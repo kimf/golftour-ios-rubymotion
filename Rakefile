@@ -11,17 +11,21 @@ else
   Bundler.require
 end
 
+require 'sugarcube-repl'
 require 'sugarcube-gestures'
 
 Motion::Project::App.setup do |app|
 
   app.name = 'Golftour'
   app.sdk_version = "6.1"
-  app.device_family = [:iphone, :ipad]
+  app.device_family = [:iphone]
+  app.prerendered_icon = true
 
+  app.archs['iPhoneOS'] = ['armv7']
 
-  app.files = (app.files - Dir.glob('./app/**/*.rb')) + Dir.glob("./lib/**/*.rb") + Dir.glob("./config/**/*.rb") + Dir.glob("./app/**/*.rb")
-
+  Dir.glob(File.join(app.project_dir, 'lib/**/*.rb')).flatten.each do |file|
+    app.files.push(file)
+  end
 
   app.pods do
     pod 'SVProgressHUD'
@@ -54,4 +58,10 @@ Motion::Project::App.setup do |app|
       app.seed_id = config['release']['seed_id']
     end
   end
+end
+
+desc "Open latest crash log"
+task :log do
+  p "open #{Dir[File.join(ENV['HOME'], "/Library/Logs/DiagnosticReports/.Scorerrest*")].last}"
+  exec "open #{Dir[File.join(ENV['HOME'], "/Library/Logs/DiagnosticReports/.Scorerrest*")].last}"
 end

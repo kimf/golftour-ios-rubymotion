@@ -1,10 +1,13 @@
 class NewPlayerController < Formotion::FormController
   attr_accessor :player, :name, :email, :hcp
+  stylesheet :base
 
-  layout :root do
-    self.title = "New Player"
-    closeButton = UIBarButtonItem.alloc.initWithTitle("Cancel", style: UIBarButtonItemStylePlain, target:self, action:'cancel')
-    self.navigationItem.leftBarButtonItem = closeButton
+  layout do
+    self.title = "Ny Spelare"
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemStop,
+        target: self,
+        action: :cancel)
   end
 
   def cancel
@@ -12,6 +15,7 @@ class NewPlayerController < Formotion::FormController
   end
 
   def init
+    super
     form = Formotion::Form.new({
       sections: [{
         rows: [{
@@ -51,7 +55,7 @@ class NewPlayerController < Formotion::FormController
     email = form.render[:email]
     hcp = form.render[:hcp]
 
-    AFMotion::Client.shared.post("players", name: name, email: email, hcp: hcp) do |result|
+    AFMotion::Client.shared.post("players?auth_token=#{App.delegate.auth_token}", name: name, email: email, hcp: hcp) do |result|
       if result.success?
         player = result.object["player"]
         Player.create(
@@ -63,6 +67,7 @@ class NewPlayerController < Formotion::FormController
           hcp: player["hcp"],
           email: player["email"]
         )
+        App.notification_center.post PlayerWasAddedNotification
         App.delegate.router.pop
       elsif result.failure?
         App.alert("Kunde inte spara...")

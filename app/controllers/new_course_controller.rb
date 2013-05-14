@@ -2,7 +2,7 @@ class NewCourseController < UIViewController
   stylesheet :base
   attr_accessor :course, :name
 
-  layout :root do
+  layout do
     self.title = "New Course"
     closeButton = UIBarButtonItem.alloc.initWithTitle("Close", style: UIBarButtonItemStylePlain, target:self, action:'close')
     self.navigationItem.leftBarButtonItem = closeButton

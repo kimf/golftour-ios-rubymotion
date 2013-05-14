@@ -1,3 +1,5 @@
+PlayerWasAddedNotification = "PlayerWasAddedNotification"
+
 class AppDelegate
   attr_reader :window, :router, :store
 
@@ -17,11 +19,15 @@ class AppDelegate
 
     map_urls
 
-    # .open(url, animated)
-    if self.is_authenticated?
-      @router.open("leaderboard", false)
+    if App::Persistence['active_round']
+      @router.open("playing", false)
     else
-      @router.open("login", false)
+      # .open(url, animated)
+      if self.is_authenticated?
+        @router.open("leaderboard", false)
+      else
+        @router.open("login", false)
+      end
     end
     true
   end
@@ -29,17 +35,20 @@ class AppDelegate
   def map_urls
     @router = Routable::Router.router
     @router.navigation_controller = UINavigationController.alloc.init
+    @router.navigation_controller.navigationBar.tintColor = "#1b8ad4".to_color
 
     # :modal means we push it modally.
-    @router.map("login", LoginController, modal: true)
-    @router.map("register", RegisterController, shared: true)
+    @router.map("login", LoginController, resets: true)
+    @router.map("register", RegisterController)
 
     # :shared means it will only keep one instance of this VC in the hierarchy;
     # if we push it again later, it will pop any covering VCs.
     @router.map("leaderboard", LeaderboardController, shared: true)
 
-    @router.map("courses", CoursesController, shared: true)
-    @router.map("new_course", NewCourseController, modal: true)
+    @router.map("courses", CoursesController, transition: :cover)
+    #@router.map("new_course", NewCourseController, modal: true)
+
+    @router.map("setup_game", SetupGameController)
 
     @router.map("players", PlayersController)
     @router.map("new_player", NewPlayerController, modal: true)
@@ -49,23 +58,15 @@ class AppDelegate
 
     @router.map("back_to_leaderboard", LeaderboardController, resets: true)
 
-
-    # can also route arbitrary blocks of code
-    @router.map("logout") do
-      App::Persistence['authToken'] = nil
-      @router.open("login")
-    end
-
     @window.rootViewController = @router.navigation_controller
   end
 
   def auth_token
-    "" #App::Persistence['authToken'].nil? ? "" : App::Persistence['authToken']
+    App::Persistence['authToken'].nil? ? "" : App::Persistence['authToken']
   end
 
   def is_authenticated?
-    true
-    #App::Persistence['authToken'].nil? ? false : true
+    App::Persistence['authToken'].nil? ? false : true
   end
 
   def applicationWillResignActive(application)

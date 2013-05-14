@@ -1,4 +1,5 @@
 class RegisterController < Formotion::FormController
+  stylesheet :base
 
   def init
     form = Formotion::Form.new({

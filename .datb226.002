@@ -1,0 +1,110 @@
+exit
+exit
+tree
+a 43
+top=0
+left=10
+top=100
+backgroundColor = "black".to_color
+height=40
+exit
+exit
+tree
+a 43
+top="0"
+top = 0
+top: 0
+lef=10
+text
+text = "HEJSAN"
+a
+a.text = "Hej"
+a.text = "Spelare"
+a.top = 0
+up 5
+up 5
+down 2
+down 2
+tree
+a 42
+a 43
+a.height = 22
+height = 22
+exit
+tree
+a 45
+a.left = 300
+left = 300
+right 20
+left 10
+exit
+tree
+a 29
+left 20
+right 10
+right 10
+left 5
+a 24
+exit
+exit
+tree
+a 32
+left 20
+right 50
+left 20
+exit
+rr
+exit
+exit
+exit
+tree
+a 45
+a 35
+backgroundColor = "red".to_color
+a.backgroundColor = "red".to_color
+a.textColor
+textColor
+a
+exit
+tree
+a 48
+a.tintColor = "black".to_color
+a.tintColor = UIColor.clearColor
+a.tintColor = UIColor.clearColor
+tintColor
+a.tintColor = 0
+a.tintColor = "#b4ddfe".to_color
+a.textColor = "black".to_color
+a.tintColor = "#1b8ad4".to_color
+exit
+exit
+exit
+exit
+tree
+a 27
+top 20
+down 420
+a.layer
+a.layer.cornerRadius = "4"
+a.layer.cornerRadius = "2"
+a.width = "100%"
+width = "100%"
+left 0
+left = "0"
+a.left="0"
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+NSNotificationCenter.defaultCenter.postNotificationName(PlayerWasAddedNotification, object:self)
+NSNotificationCenter.defaultCenter.postNotificationName('PlayerWasAddedNotification', object:self)
+NSNotificationCenter.defaultCenter.postNotificationName('PlayerWasAddedNotification', object:self)
+NSNotificationCenter.defaultCenter.postNotificationName('PlayerWasAddedNotification', object:self)

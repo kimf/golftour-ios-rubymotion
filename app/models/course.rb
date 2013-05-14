@@ -5,4 +5,6 @@ class Course < NanoStore::Model
   attribute :index
   attribute :has_gps
   attribute :holes_count
+  attribute :lat
+  attribute :lng
 end

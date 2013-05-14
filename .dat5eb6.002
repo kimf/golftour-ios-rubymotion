@@ -1,0 +1,188 @@
+Player.create(name: "Johan Lundgren", points: 100)
+Player.create(name: "Johan Lundgren", points: 100)
+Player.create(name: "Johan Lundgren", points: 100)
+App.notification_center.post PlayerWasAddedNotification
+exit
+Player.all.each{|i| i.delete }
+App.notification_center.post PlayerWasAddedNotification
+Course.all.each{|i| i.delete }
+Hole.all.each{|i| i.delete }
+exit
+self.backgroundColor
+self.backgroundColor = UIColor.clearColor
+tree
+a 11
+backgroundColor
+backgroundColor = "red".to_color
+a 10
+backgroundColor = "red".to_color
+a 12
+backgroundColor = "red".to_color
+a 13
+backgroundColor = "red".to_color
+a.backgroundColor
+a.backgroundColor = "red".to_color
+a 10
+a.backgroundColor = "red".to_color
+a.backgroundColor = UIColor.clearColor
+a << subview
+a << subview(UILabel, :player_label)
+tree
+a 41
+a << subview(UILabel, :player_label)
+exit
+tree
+a 56
+exit
+tree
+a 86
+a 83
+a.backgroundColor = UIColor.clearColor
+a 82
+a.backgroundColor = UIColor.clearColor
+exit
+tree
+exit
+tree
+exit
+tree
+exit
+tree
+exit
+tree
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+tree
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+Scorecard.new(player_ids: [1,2,3,4])
+s = Scorecard.new(player_ids: [1,2,3,4])
+s.player_ids
+exit
+exit
+exit
+exit
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+Player.create(points: 0, rounds: 0, id: 100, name: "Olle Larrazabal", average_points: 100, hcp: 20, email: "kim@kim.se")
+App.notification_center.post PlayerWasAddedNotification
+exit
+exit
+exit
+exit
+exit
+exit
+tree
+exit
+Player.count
+Player.all.each{|i| i.delete }
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+tree
+exit
+exit
+exit
+exit
+exit
+App::Persistence['authToken'] = nil
+exit
+exit
+exit
+exit
+rr
+exit
+exit
+exit
+exit
+App.delegate.router.open("leaderboard", true)
+App.delegate.router.open("logout", true)
+exit
+exit
+exit
+exit
+App::Persistence["current_user_id"]
+App::Persistence["current_player_id"]
+exit
+exit
+App::Persistence['current_player_ids']
+App::Persistence['current_player_ids']
+App::Persistence['current_player_ids']
+App::Persistence['current_player_ids'] << 2
+App::Persistence['current_player_ids'].unfreeze
+App::Persistence['current_player_ids'].frozen?
+App::Persistence['current_player_ids'].immutable?
+App::Persistence['current_player_ids'].to_a
+App::Persistence['current_player_ids'].to_a << 1
+App::Persistence['current_player_ids'].map
+App::Persistence['current_player_ids'].map(&:id)
+App::Persistence['current_player_ids'].map(&:i)
+App::Persistence['current_player_ids']
+new_array = [2]
+new_array.merge(App::Persistence['current_player_ids'])
+new_array.join(App::Persistence['current_player_ids'])
+new_array.push(App::Persistence['current_player_ids'])
+new_array.push(App::Persistence['current_player_ids'].keys)
+new_array.push(App::Persistence['current_player_ids'].index)
+new_array = Array.new(App::Persistence['current_player_ids'], 2)
+App::Persistence['current_player_ids']{|i| i}
+App::Persistence['current_player_ids'].select
+App::Persistence['current_player_ids'].collect
+App::Persistence['current_player_ids'].collect.to_a
+new_array = App::Persistence['current_player_ids'].collect.to_a
+new_array << 2
+App::Persistence['current_player_ids'] = new_array
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit

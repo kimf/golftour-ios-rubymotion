@@ -1,16 +1,30 @@
 class LeaderboardController < UITableViewController
   include Refreshable
 
-  stylesheet :table
+  stylesheet :base
 
   attr_accessor :players
 
   layout :table do
-    self.title = "Leaderboard"
+    self.title = "Ledartavla"
     @players = Player.all({:sort => {:points => :desc}})
 
-    newButton = UIBarButtonItem.alloc.initWithTitle("PLAY", style: UIBarButtonItemStylePlain, target:self, action:'play')
-    self.navigationItem.rightBarButtonItem = newButton
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemStop,
+        target: self,
+        action: :logout)
+
+
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemPlay,
+        target: self,
+        action: :play)
+
+    @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
+      @players = Player.all({:sort => {:points => :desc}})
+      self.tableView.reloadData
+     end
+
     load_data
 
     on_refresh do
@@ -24,10 +38,23 @@ class LeaderboardController < UITableViewController
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    fresh_cell.tap do |cell|
-      p = @players[indexPath.row]
-      cell.textLabel.text = "#{p.name}"
-      cell.detailTextLabel.text = "#{p.points}"
+    p = @players[indexPath.row]
+    subview(UITableViewCell, :empty_cell) do |cell|
+      subview(UILabel, :player_position_label, text: "#{indexPath.row + 1}")
+      subview(UILabel, :player_name_label, text: "#{p.name}")
+      subview(UILabel, :player_rounds_label, text: "#{p.rounds}")
+      subview(UILabel, :player_points_label, text: "#{p.points}")
+      subview(UIView, :bottom_line)
+
+      cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
+    end
+  end
+
+  def tableView(tableView, viewForHeaderInSection:section)
+    subview(UIView, :table_header) do
+      @player_label = subview(UILabel, :player_label)
+      @round_label  = subview(UILabel, :round_label)
+      @points_label = subview(UILabel, :points_label)
     end
   end
 
@@ -36,7 +63,17 @@ class LeaderboardController < UITableViewController
     App.delegate.router.open("courses", true)
   end
 
+  def logout
+    UIActionSheet.alert 'Vill du verkligen logga ut?', buttons: ['Näää', 'Japp!'],
+      cancel: proc { },
+      destructive: proc {
+        App::Persistence['authToken'] = nil
+        App.delegate.router.open("login")
+      }
+  end
+
   def load_data
+    SVProgressHUD.showWithStatus("Synkar ledartavla", maskType:SVProgressHUDMaskTypeGradient)
     AFMotion::Client.shared.get("players?auth_token=#{App.delegate.auth_token}") do |result|
       if result.success?
         result.object["players"].each do |player|
@@ -64,26 +101,14 @@ class LeaderboardController < UITableViewController
         end
         @players = Player.all({:sort => {:points => :desc}})
         self.tableView.reloadData
+        SVProgressHUD.dismiss
       elsif result.failure?
         App.alert(result.error.localizedDescription)
+        SVProgressHUD.dismiss
       end
       end_refreshing
     end
 
     return true
   end
-
-  private
-    def fresh_cell
-      tableView.dequeueReusableCellWithIdentifier('Cell') ||
-      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleValue1, reuseIdentifier:'Cell').tap do |cell|
-        layout cell, :cell do
-          subview(UIView, :bottom_line)
-          subview(UILabel, :points_label)
-        end
-
-        cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))
-      end
-    end
-
 end

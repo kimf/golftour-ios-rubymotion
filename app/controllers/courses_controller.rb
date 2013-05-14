@@ -1,28 +1,34 @@
 class CoursesController < UITableViewController
-  include Refreshable
 
-  stylesheet :table
+  stylesheet :base
 
   attr_accessor :courses, :filtered_courses, :isFiltered
 
   layout :table do
-    self.title = "Välj bana"
-    @search_results = []
-    @filtered_courses = []
-    @courses = Course.all({:sort => {:name => :asc}})
+  end
 
-    closeButton = UIBarButtonItem.alloc.initWithTitle("Avbryt", style: UIBarButtonItemStylePlain, target:self, action:'cancel')
-    self.navigationItem.leftBarButtonItem = closeButton
+  def layoutDidLoad
+   self.title = "Välj bana"
+   @search_results = []
+   @filtered_courses = []
+   @courses = Course.all({:sort => {:name => :asc}})
 
-    search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
-    search_bar.delegate = self
-    view.addSubview(search_bar)
-    view.tableHeaderView = search_bar
+   # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+   #     UIBarButtonSystemItemBack,
+   #     target: self,
+   #     action: :cancel)
 
-    reload_data if @courses.length == 0
-    on_refresh do
-      reload_data
-    end
+   self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+       UIBarButtonSystemItemRefresh,
+       target: self,
+       action: :sync)
+
+   search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
+   search_bar.delegate = self
+   view.addSubview(search_bar)
+   view.tableHeaderView = search_bar
+
+   reload_data if @courses.length == 0
   end
 
   def searchBarSearchButtonClicked(search_bar)
@@ -53,10 +59,8 @@ class CoursesController < UITableViewController
   end
 
   def reload_data
-    if @isFiltered
-      end_refreshing
-      return true
-    end
+    return false if @isFiltered
+
     SVProgressHUD.showWithStatus("Laddar ner banor och hål. Kommer ta ett tag!", maskType:SVProgressHUDMaskTypeGradient)
     App.delegate.store.save_interval = 10000
 
@@ -70,6 +74,8 @@ class CoursesController < UITableViewController
           existing_course.index       = course["index"]
           existing_course.has_gps     = course["has_gps"]
           existing_course.holes_count = course["holes_count"]
+          existing_course.lat         = course["lat"]
+          existing_course.lng         = course["lng"]
           App.delegate.store          << existing_course
 
           if course["holes"] && course["holes"].length > 0
@@ -100,7 +106,6 @@ class CoursesController < UITableViewController
         SVProgressHUD.dismiss
         App.alert(result.error.localizedDescription)
       end
-      end_refreshing
     end
 
     return true
@@ -110,9 +115,15 @@ class CoursesController < UITableViewController
     App.delegate.router.open("leaderboard")
   end
 
-  def new
-    App.delegate.router.open("new_course")
+  def sync
+    UIActionSheet.alert 'Vill du synca banor, det tar lite tid?', buttons: ['Ja fö fan', 'Näää!'],
+      cancel: proc { reload_data },
+      destructive: proc {}
   end
+
+  # def new
+  #   App.delegate.router.open("new_course")
+  # end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     courses = @isFiltered ? @filtered_courses : @courses
@@ -127,7 +138,7 @@ class CoursesController < UITableViewController
     courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     App::Persistence['current_course_id'] = courses[indexPath.row].id
-    App.delegate.router.open("players")
+    App.delegate.router.open("setup_game")
   end
 
   private
@@ -137,8 +148,7 @@ class CoursesController < UITableViewController
         layout cell, :cell do
           subview(UIView, :bottom_line)
         end
-
-        cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
       end
     end
 end

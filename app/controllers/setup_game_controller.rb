@@ -1,53 +1,45 @@
-class PlayersController < UITableViewController
+class SetupGameController < UITableViewController
   stylesheet :base
-  attr_accessor :players
 
   layout :table do
-    @players = Player.all({:sort => {:name => :desc}})
-  end
-
-  def viewDidLoad
-    super
-    self.title = "Spelare"
-
+    self.title = "Välj spelare"
+    App::Persistence['current_player_ids'] = [App::Persistence["current_player_id"]]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-        UIBarButtonSystemItemAdd,
-        target: self,
-        action: :add_player)
+      UIBarButtonSystemItemAdd,
+      target: self,
+      action: :add_player
+    )
+
+    @play_button = subview(UIButton, :play_button).on(:touch){ play }
 
     @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
-      @players = Player.all({:sort => {:points => :desc}})
       self.tableView.reloadData
     end
   end
 
-
   def tableView(tableView, numberOfRowsInSection:section)
-    @players.count || 0
+    App::Persistence['current_player_ids'].count || 0
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     fresh_cell.tap do |cell|
-      s = @players[indexPath.row]
+      id = App::Persistence['current_player_ids'][indexPath.row]
+      s  = Player.find(:id, NSFEqualTo, id).first
       cell.textLabel.text = "#{s.name}"
+      cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
     end
   end
 
-
-  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    player = @players[indexPath.row]
-    new_array = App::Persistence['current_player_ids'].collect.to_a
-    new_array << player.id
-    App::Persistence['current_player_ids'] = new_array
-    App.notification_center.post PlayerWasAddedNotification
-    App.delegate.router.pop
-  end
-
-
   def add_player
-    App.delegate.router.open("new_player", true)
+    App.delegate.router.open("players", true)
   end
+
+  def play
+    App::Persistence['active_round'] = true
+    App.delegate.router.open("playing", true)
+  end
+
 
   private
     def fresh_cell
@@ -60,4 +52,5 @@ class PlayersController < UITableViewController
         cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))
       end
     end
+
 end

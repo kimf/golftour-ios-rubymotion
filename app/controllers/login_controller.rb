@@ -20,7 +20,7 @@ class LoginController < Formotion::FormController
         }],
       },{
         rows: [{
-          title: "Login",
+          title: "LOGGA IN",
           type: :submit
         }]
       }]
@@ -32,27 +32,25 @@ class LoginController < Formotion::FormController
     super.initWithForm(form)
   end
 
+  def viewDidLoad
+    super
+    self.title = "Logga in"
+  end
+
   def login
-    headers = { 'Content-Type' => 'application/json' }
-    data = BW::JSON.generate({ email: form.render[:email], password: form.render[:password] })
-
-    SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
-
-    BW::HTTP.post("#{App.delegate.server}/authenticate", { headers: headers, payload: data } ) do |response|
-      if response.status_description.nil?
-        App.alert(response.error_message)
-      else
-        if response.ok?
-          json = BW::JSON.parse(response.body.to_s)
-          App::Persistence['authToken'] = json['data']['auth_token']
-          @router.open("leaderboard", false)
-        elsif response.status_code.to_s =~ /40\d/
-          App.alert("Login failed")
-        else
-          App.alert(response.to_s)
-        end
+    email     = form.render[:email]
+    password  = form.render[:password]
+    SVProgressHUD.showWithStatus("Loggar in", maskType:SVProgressHUDMaskTypeGradient)
+    AFMotion::Client.shared.post("authenticate", email: email, password: password) do |result|
+      if result.success?
+        App::Persistence['current_player_id'] = result.object["id"]
+        App::Persistence['authToken'] = result.object["auth_token"]
+        App.delegate.router.open("leaderboard", false)
+        SVProgressHUD.dismiss
+      elsif result.failure?
+        SVProgressHUD.dismiss
+        App.alert("Kunde inte logga in...")
       end
-      SVProgressHUD.dismiss
     end
   end
 end

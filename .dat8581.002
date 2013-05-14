@@ -1,0 +1,136 @@
+Hole.all.each{|c| c.delete }
+Course.all.last
+Course.all.each{|c| c.delete }
+Hole.count
+Hole.all.each{|c| c.delete }
+exit
+Course.count
+Hole.count
+Hole.all.each{|c| c.delete }
+Course.all.each{|c| c.delete}
+Hole.count
+Course.count
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+alert = UIAlertView.initWithTitle("VILL DU VERKLIGEN VERKLIGEN SLUTA SPELA?")
+alert = UIAlertView.new
+alert
+alert
+alert.cancelButtonTitle = "NÄ SPELA VIDARE"
+alert
+alert.cancelButtonTitle = "NÄ SPELA VIDARE"
+alert.cancelButtonTitle = "NÄ SPELA VIDARE"
+alert = UIAlertView.new
+alert.cancelButtonTitle = "NÄ SPELA VIDARE"
+alert.show
+alert.hide
+alert.hide
+alert.close
+alert.cancel
+exit
+alert_box = UIAlertView.alloc.initWithTitle("Avsluta runda", message:"Verkligen säker på att du vill sluta?", delegate: nil, cancelButtonTitle: "Nä, spela vidare", otherButtonTitles: "Ja fö fan!")
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+a 6
+parent
+main
+self
+up 1
+pop
+close
+exit
+exit
+exit
+slide = HoleViewController.new
+slide.hole = Hole.all.first
+slide.view.frame
+slide.view
+slide.view.left
+slide.left
+slide.frame
+slide.view
+exit
+tree
+tree
+a 50
+self.backgroundColor = "red".to_color
+a 1
+self.backgroundColor = "red".to_color
+up 10
+down 10
+down 100
+up 100
+left -100
+left 100
+shadow(opacity: 0.5, offset: [0, 0], color: :black, radius: 1)
+a 45
+shadow(opacity: 0.5, offset: [0, 0], color: :black, radius: 1)
+shadow(opacity: 0.5, offset: [0, 0], color: :black, radius: 1)
+shadow(opacity: 0.5, offset: [0, 0], color: :black, radius: 1)
+shadow(opacity: 0.5, offset: [0, 0], color: :black, radius: 1)
+reset
+restore
+thinner 10
+exit
+tree root
+a 1
+up 10
+a
+a.players
+a.navigationBar
+a.navigationItem
+a.navigationItem.title
+a.navigationItem.backgroundColor = "red".to_color
+a.navigationController
+tree root
+a 0
+a
+navigationItem
+backgroundColor = "red".to_color
+a.backgroundColor = UiColor.redColor
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+Course.count
+Course.all.each{|c| c.destroy }
+Course.all.each{|c| c.delete }
+Course.all.each{|c| c.delete }
+Hole.all.each{|c| c.delete }
+exit
+exit
+exit
+exit
+rr
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+tree
+tree
+exot
+exit
