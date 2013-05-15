@@ -7,8 +7,7 @@ class LeaderboardController < UITableViewController
 
   layout :table do
     self.title = "Ledartavla"
-    @players = Player.all({:sort => {:points => :desc}})
-
+    @players = Player.order{|a, b| a.points <=> b.points}.all
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemStop,
         target: self,
@@ -21,7 +20,7 @@ class LeaderboardController < UITableViewController
         action: :play)
 
     @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
-      @players = Player.all({:sort => {:points => :desc}})
+      @players = Player.order{|a, b| a.points <=> b.points}.all
       self.tableView.reloadData
      end
 
@@ -77,7 +76,7 @@ class LeaderboardController < UITableViewController
     AFMotion::Client.shared.get("players?auth_token=#{App.delegate.auth_token}") do |result|
       if result.success?
         result.object["players"].each do |player|
-          existing_player = Player.find(:id, NSFEqualTo, player["id"]).first
+          existing_player = Player.where(:id).eq(player["id"]).first
           if !existing_player
             puts "Creating new"
             Player.create(
@@ -99,7 +98,8 @@ class LeaderboardController < UITableViewController
             existing_player.save
           end
         end
-        @players = Player.all({:sort => {:points => :desc}})
+        Player.serialize_to_file('players.dat')
+        @players = Player.order{|a, b| a.points <=> b.points}.all
         self.tableView.reloadData
         SVProgressHUD.dismiss
       elsif result.failure?

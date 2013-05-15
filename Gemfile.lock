@@ -41,11 +41,14 @@ GEM
     motion-cocoapods (1.3.0.rc1)
       cocoapods (>= 0.17.0)
     motion-require (0.0.6)
+    motion-support (0.2.4)
+      motion-require (>= 0.0.6)
     motion-testflight (1.5)
+    motion_model (0.4.4)
+      bubble-wrap (= 1.3.0.osx)
+      motion-support (>= 0.1.0)
     multi_json (1.7.3)
     multipart-post (1.2.0)
-    nano-store (0.6.3)
-      motion-cocoapods (>= 1.2.1)
     netrc (0.7.7)
     octokit (1.24.0)
       addressable (~> 2.2)
@@ -72,7 +75,7 @@ DEPENDENCIES
   formotion
   motion-cocoapods (= 1.3.0.rc1)
   motion-testflight
-  nano-store
+  motion_model (= 0.4.4)
   rake
   routable
   sugarcube

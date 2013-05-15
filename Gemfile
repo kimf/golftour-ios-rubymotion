@@ -5,9 +5,9 @@ gem 'formotion'
 gem 'teacup'
 gem 'sugarcube'
 gem 'routable'
+gem 'motion_model', '0.4.4'
 
 gem 'afmotion'
 gem 'motion-cocoapods', '1.3.0.rc1'
-gem 'nano-store'
 
 gem 'motion-testflight'

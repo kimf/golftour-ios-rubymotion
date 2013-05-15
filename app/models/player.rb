@@ -1,9 +1,11 @@
-class Player < NanoStore::Model
-  attribute :id
-  attribute :name
-  attribute :points
-  attribute :rounds
-  attribute :average_points
-  attribute :email
-  attribute :hcp
+class Player
+  include MotionModel::Model
+  include MotionModel::ArrayModelAdapter
+
+  columns :name           => :string,
+          :points         => :integer,
+          :rounds         => :integer,
+          :average_points => :float,
+          :email          => :string,
+          :hcp            => :float
 end

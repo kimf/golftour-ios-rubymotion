@@ -3,7 +3,7 @@ class PlayersController < UITableViewController
   attr_accessor :players
 
   layout :table do
-    @players = Player.all({:sort => {:name => :desc}})
+    @players = Player.order(:name).all
   end
 
   def viewDidLoad
@@ -17,7 +17,7 @@ class PlayersController < UITableViewController
         action: :add_player)
 
     @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
-      @players = Player.all({:sort => {:points => :desc}})
+      @players = Player.order(:name).all
       self.tableView.reloadData
     end
   end

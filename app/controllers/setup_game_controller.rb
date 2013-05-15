@@ -25,7 +25,7 @@ class SetupGameController < UITableViewController
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     fresh_cell.tap do |cell|
       id = App::Persistence['current_player_ids'][indexPath.row]
-      s  = Player.find(:id, NSFEqualTo, id).first
+      s  = Player.where(:id).eq(id).first
       cell.textLabel.text = "#{s.name}"
       cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
     end

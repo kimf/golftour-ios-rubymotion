@@ -21,17 +21,13 @@ Motion::Project::App.setup do |app|
   app.device_family = [:iphone]
   app.prerendered_icon = true
 
-  app.archs['iPhoneOS'] = ['armv7']
-
   Dir.glob(File.join(app.project_dir, 'lib/**/*.rb')).flatten.each do |file|
     app.files.push(file)
   end
 
   app.pods do
     pod 'SVProgressHUD'
-    pod 'NanoStore'
     pod 'AFNetworking'
-    pod 'Reachability'
   end
 
   if File.exists?('./config.yml')

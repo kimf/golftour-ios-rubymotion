@@ -1,10 +1,13 @@
-class Hole < NanoStore::Model
-  attribute :course_id
-  attribute :id
-  attribute :nr
-  attribute :par
-  attribute :length
-  attribute :hcp
-  attribute :lat
-  attribute :lng
+class Hole
+  include MotionModel::Model
+  include MotionModel::ArrayModelAdapter
+
+  columns :nr         => :integer,
+          :par        => :integer,
+          :length     => :integer,
+          :hcp        => :integer,
+          :lat        => :string,
+          :lng        => :string
+
+  belongs_to :course
 end

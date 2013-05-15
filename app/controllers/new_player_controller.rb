@@ -67,6 +67,8 @@ class NewPlayerController < Formotion::FormController
           hcp: player["hcp"],
           email: player["email"]
         )
+        Player.serialize_to_file('players.dat')
+
         App.notification_center.post PlayerWasAddedNotification
         App.delegate.router.pop
       elsif result.failure?

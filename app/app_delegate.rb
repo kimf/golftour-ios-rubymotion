@@ -4,9 +4,6 @@ class AppDelegate
   attr_reader :window, :router, :store
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    #SETUP DB
-    @store = NanoStore.shared_store ||= NanoStore.store(:file, App.documents_path + "/nano.db")
-
     #SETUP AFMOTION NETWORK CLIENT
     AFNetworkActivityIndicatorManager.sharedManager.enabled=true
     AFMotion::Client.build_shared(NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')) do

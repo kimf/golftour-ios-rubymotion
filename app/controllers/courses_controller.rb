@@ -11,7 +11,7 @@ class CoursesController < UITableViewController
    self.title = "Välj bana"
    @search_results = []
    @filtered_courses = []
-   @courses = Course.all({:sort => {:name => :asc}})
+   @courses = Course.order(:name).all
 
    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
    #     UIBarButtonSystemItemBack,
@@ -62,25 +62,23 @@ class CoursesController < UITableViewController
     return false if @isFiltered
 
     SVProgressHUD.showWithStatus("Laddar ner banor och hål. Kommer ta ett tag!", maskType:SVProgressHUDMaskTypeGradient)
-    App.delegate.store.save_interval = 10000
 
     AFMotion::Client.shared.get("courses?auth_token=#{App.delegate.auth_token}") do |result|
       if result.success?
         result.object["courses"].each do |course|
-          existing_course = Course.find(:id, NSFEqualTo, course["id"]).first || Course.new
-          existing_course.id          = course["id"]
-          existing_course.name        = course["name"]
-          existing_course.par         = course["par"]
-          existing_course.index       = course["index"]
-          existing_course.has_gps     = course["has_gps"]
-          existing_course.holes_count = course["holes_count"]
-          existing_course.lat         = course["lat"]
-          existing_course.lng         = course["lng"]
-          App.delegate.store          << existing_course
-
           if course["holes"] && course["holes"].length > 0
+            existing_course = Course.where(:id).eq(course["id"]).first || Course.new
+            existing_course.id          = course["id"]
+            existing_course.name        = course["name"]
+            existing_course.par         = course["par"]
+            existing_course.index       = course["index"]
+            existing_course.has_gps     = course["has_gps"]
+            existing_course.holes_count = course["holes_count"]
+            existing_course.lat         = course["lat"]
+            existing_course.lng         = course["lng"]
+
             course["holes"].each do |hole|
-              existing_hole = Hole.find(:id, NSFEqualTo, hole["id"]).first || Hole.new
+              existing_hole = Hole.where(:id).eq(hole["id"]).first || Hole.new
               existing_hole.course_id  = course["id"]
               existing_hole.id         = hole["id"]
               existing_hole.nr         = hole["nr"]
@@ -89,16 +87,15 @@ class CoursesController < UITableViewController
               existing_hole.hcp        = hole["hcp"]
               existing_hole.lat        = hole["lat"]
               existing_hole.lng        = hole["lng"]
-              App.delegate.store       << existing_hole
+              existing_course.holes << existing_hole
             end
           end
-
+          existing_course.save
         end
+        Course.serialize_to_file('courses.dat')
+        Hole.serialize_to_file('holes.dat')
 
-        App.delegate.store.save
-        App.delegate.store.save_interval = 1
-
-        @courses = Course.all({:sort => {:name => :asc}})
+        @courses = Course.order(:name).all
         self.tableView.reloadData
 
         SVProgressHUD.dismiss
