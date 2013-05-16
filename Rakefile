@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project/template/ios'
-require 'rubygems'
 require 'bundler'
 require 'yaml'
 
-if ARGV.join(' ') =~ /spec/
-  Bundler.require :default, :spec
-else
-  Bundler.require
-end
+Bundler.require
 
 require 'sugarcube-repl'
 require 'sugarcube-gestures'
@@ -21,13 +16,19 @@ Motion::Project::App.setup do |app|
   app.device_family = [:iphone]
   app.prerendered_icon = true
 
+  # add local sources
   Dir.glob(File.join(app.project_dir, 'lib/**/*.rb')).flatten.each do |file|
     app.files.push(file)
   end
 
+  app.frameworks += [
+    'QuartzCore'
+  ]
+
   app.pods do
     pod 'SVProgressHUD'
     pod 'AFNetworking'
+    pod 'ViewDeck'
   end
 
   if File.exists?('./config.yml')
@@ -35,6 +36,7 @@ Motion::Project::App.setup do |app|
 
     app.identifier = config['identifier']
     app.info_plist['API_URL'] = config['api_url']
+
     app.development do
       # This entitlement is required during development but must not be used for release.
       app.entitlements['get-task-allow'] = true

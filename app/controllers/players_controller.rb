@@ -41,12 +41,12 @@ class PlayersController < UITableViewController
     new_array << player.id
     App::Persistence['current_player_ids'] = new_array
     App.notification_center.post PlayerWasAddedNotification
-    App.delegate.router.pop
+    self.navigationController.pop
   end
 
 
   def add_player
-    App.delegate.router.open("new_player", true)
+    self.navigationController << NewPlayerController.alloc.init
   end
 
   private

@@ -4,8 +4,6 @@ class ScorecardController < UIViewController
   layout do
     self.title = "Scorekort"
 
-    self.navigationController.navigationBar.tintColor = "#1b8ad4".to_color
-
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemStop,
         target: self,
@@ -25,11 +23,11 @@ class ScorecardController < UIViewController
         App::Persistence['current_player_ids'] = nil
         App::Persistence['current_hole_id'] = nil
         App::Persistence['active_round'] = false
-        App.delegate.router.open("back_to_leaderboard")
+        App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
       }
   end
 
   def hide_scorecard
-    App.delegate.router.pop
+    self.navigationController.pop
   end
 end

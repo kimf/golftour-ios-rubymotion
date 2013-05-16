@@ -13,10 +13,10 @@ class CoursesController < UITableViewController
    @filtered_courses = []
    @courses = Course.order(:name).all
 
-   # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-   #     UIBarButtonSystemItemBack,
-   #     target: self,
-   #     action: :cancel)
+   self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+       UIBarButtonSystemItemStop,
+       target: self,
+       action: :cancel)
 
    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
        UIBarButtonSystemItemRefresh,
@@ -92,8 +92,6 @@ class CoursesController < UITableViewController
           end
           existing_course.save
         end
-        Course.serialize_to_file('courses.dat')
-        Hole.serialize_to_file('holes.dat')
 
         @courses = Course.order(:name).all
         self.tableView.reloadData
@@ -109,7 +107,7 @@ class CoursesController < UITableViewController
   end
 
   def cancel
-    App.delegate.router.open("leaderboard")
+    App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
   def sync
@@ -119,7 +117,7 @@ class CoursesController < UITableViewController
   end
 
   # def new
-  #   App.delegate.router.open("new_course")
+  #   self.navigationController << NewCourseController.alloc.init
   # end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -132,10 +130,10 @@ class CoursesController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    courses = @isFiltered ? @filtered_courses : @courses
+    #courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    App::Persistence['current_course_id'] = courses[indexPath.row].id
-    App.delegate.router.open("setup_game")
+    #App::Persistence['current_course_id'] = courses[indexPath.row].id
+    self.navigationController << SetupGameController.alloc.init
   end
 
   private

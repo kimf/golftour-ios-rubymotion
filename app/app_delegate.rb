@@ -1,7 +1,7 @@
 PlayerWasAddedNotification = "PlayerWasAddedNotification"
 
 class AppDelegate
-  attr_reader :window, :router, :store
+  attr_accessor :window, :deckController, :centerController, :leftController
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     #SETUP AFMOTION NETWORK CLIENT
@@ -11,51 +11,15 @@ class AppDelegate
       operation :json
     end
 
-    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    @window.makeKeyAndVisible
+    self.window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
-    map_urls
-
-    if App::Persistence['active_round']
-      @router.open("playing", false)
+    if self.is_authenticated?
+      self.window.rootViewController = self.deckController
     else
-      # .open(url, animated)
-      if self.is_authenticated?
-        @router.open("leaderboard", false)
-      else
-        @router.open("login", false)
-      end
+      self.window.rootViewController = LoginController.alloc.init
     end
+    self.window.makeKeyAndVisible
     true
-  end
-
-  def map_urls
-    @router = Routable::Router.router
-    @router.navigation_controller = UINavigationController.alloc.init
-    @router.navigation_controller.navigationBar.tintColor = "#1b8ad4".to_color
-
-    # :modal means we push it modally.
-    @router.map("login", LoginController, resets: true)
-    @router.map("register", RegisterController)
-
-    # :shared means it will only keep one instance of this VC in the hierarchy;
-    # if we push it again later, it will pop any covering VCs.
-    @router.map("leaderboard", LeaderboardController, shared: true)
-
-    @router.map("courses", CoursesController, transition: :cover)
-    #@router.map("new_course", NewCourseController, modal: true)
-
-    @router.map("setup_game", SetupGameController)
-
-    @router.map("players", PlayersController)
-    @router.map("new_player", NewPlayerController, modal: true)
-
-    @router.map("playing", PlayingController, resets: true)
-    @router.map("scorecard", ScorecardController, modal: true)
-
-    @router.map("back_to_leaderboard", LeaderboardController, resets: true)
-
-    @window.rootViewController = @router.navigation_controller
   end
 
   def auth_token
@@ -64,6 +28,37 @@ class AppDelegate
 
   def is_authenticated?
     App::Persistence['authToken'].nil? ? false : true
+  end
+
+  def logout
+    UIActionSheet.alert 'Vill du verkligen logga ut?', buttons: ['Näää', 'Japp!'],
+      cancel: proc { },
+      destructive: proc {
+        App::Persistence['authToken'] = nil
+        self.window.rootViewController = LoginController.alloc.init
+      }
+  end
+
+
+  def login(auth_token, current_player_id)
+    App::Persistence['current_player_id'] = current_player_id
+    App::Persistence['authToken']         = auth_token
+    self.window.rootViewController        = deckController
+  end
+
+  def deckController
+    self.leftController   ||= MenuController.alloc.init
+    self.centerController ||= UINavigationController.alloc.initWithRootViewController(LeaderboardController.alloc.init)
+
+    self.centerController.navigationBar.tintColor = "#1b8ad4".to_color
+
+    deckController        ||= IIViewDeckController.alloc.initWithCenterViewController(
+                              self.centerController,
+                              leftViewController: self.leftController
+                        )
+    deckController.rightSize = 100
+
+    return deckController
   end
 
   def applicationWillResignActive(application)

@@ -32,12 +32,11 @@ class SetupGameController < UITableViewController
   end
 
   def add_player
-    App.delegate.router.open("players", true)
+    self.navigationController << PlayersController.alloc.init
   end
 
   def play
-    App::Persistence['active_round'] = true
-    App.delegate.router.open("playing", true)
+    self.navigationController << PlayingController.alloc.init
   end
 
 

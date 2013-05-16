@@ -1,13 +1,16 @@
 PODS:
   - AFNetworking (1.2.1)
   - SVProgressHUD (0.9)
+  - ViewDeck (2.2.11)
 
 DEPENDENCIES:
   - AFNetworking
   - SVProgressHUD
+  - ViewDeck
 
 SPEC CHECKSUMS:
   AFNetworking: d1ba5908b233189e424e101721acef7905b58efb
   SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+  ViewDeck: b5eddc8559b0e47259ab7addbf2de6768061f139
 
 COCOAPODS: 0.19.1

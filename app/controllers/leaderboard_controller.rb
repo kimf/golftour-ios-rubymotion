@@ -8,11 +8,13 @@ class LeaderboardController < UITableViewController
   layout :table do
     self.title = "Ledartavla"
     @players = Player.order{|a, b| a.points <=> b.points}.all
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-        UIBarButtonSystemItemStop,
-        target: self,
-        action: :logout)
 
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithTitle(
+                                              "left",
+                                              style: UIBarButtonItemStyleBordered,
+                                              target: viewDeckController,
+                                              action: 'toggleLeftView'
+                                            )
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemPlay,
@@ -24,11 +26,16 @@ class LeaderboardController < UITableViewController
       self.tableView.reloadData
      end
 
-    load_data
+    load_data if @players.length == 0
 
     on_refresh do
       load_data
     end
+  end
+
+  def viewDidLoad
+    super
+    tableView.scrollsToTop = false
   end
 
 
@@ -59,22 +66,21 @@ class LeaderboardController < UITableViewController
 
 
   def play
-    App.delegate.router.open("courses", true)
-  end
-
-  def logout
-    UIActionSheet.alert 'Vill du verkligen logga ut?', buttons: ['Näää', 'Japp!'],
-      cancel: proc { },
-      destructive: proc {
-        App::Persistence['authToken'] = nil
-        App.delegate.router.open("login")
-      }
+    modal_controller = UINavigationController.alloc.initWithRootViewController(CoursesController.alloc.init)
+    App.delegate.window.rootViewController.presentModalViewController(modal_controller, animated:true)
   end
 
   def load_data
     SVProgressHUD.showWithStatus("Synkar ledartavla", maskType:SVProgressHUDMaskTypeGradient)
     AFMotion::Client.shared.get("players?auth_token=#{App.delegate.auth_token}") do |result|
       if result.success?
+        # result.object["tours"].each do |tour|
+        #   existing_tour = Tour.where(:id).eq(tour["id"]).first || Tour.new
+        #   existing_tour.id    = tour["id"]
+        #   existing_tour.name  = tour["name"]
+        #   existing_tour.save
+        # end
+
         result.object["players"].each do |player|
           existing_player = Player.where(:id).eq(player["id"]).first
           if !existing_player
@@ -98,7 +104,7 @@ class LeaderboardController < UITableViewController
             existing_player.save
           end
         end
-        Player.serialize_to_file('players.dat')
+
         @players = Player.order{|a, b| a.points <=> b.points}.all
         self.tableView.reloadData
         SVProgressHUD.dismiss

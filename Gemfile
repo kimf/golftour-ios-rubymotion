@@ -1,11 +1,10 @@
 source "https://rubygems.org"
 gem 'rake'
-gem 'bubble-wrap', '1.3.0.osx'
-gem 'formotion'
+gem 'bubble-wrap', '1.3.0'
 gem 'teacup'
 gem 'sugarcube'
-gem 'routable'
-gem 'motion_model', '0.4.4'
+gem 'formotion'
+gem 'motion_model', git: 'git@github.com:kimf/MotionModel.git'
 
 gem 'afmotion'
 gem 'motion-cocoapods', '1.3.0.rc1'

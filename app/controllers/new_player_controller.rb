@@ -11,7 +11,7 @@ class NewPlayerController < Formotion::FormController
   end
 
   def cancel
-    App.delegate.router.pop
+    self.navigationController.pop
   end
 
   def init
@@ -67,10 +67,9 @@ class NewPlayerController < Formotion::FormController
           hcp: player["hcp"],
           email: player["email"]
         )
-        Player.serialize_to_file('players.dat')
 
         App.notification_center.post PlayerWasAddedNotification
-        App.delegate.router.pop
+        self.navigationController.pop
       elsif result.failure?
         App.alert("Kunde inte spara...")
       end

@@ -24,7 +24,7 @@ class PlayingController < UIViewController
   end
 
   def show_scorecard
-    App.delegate.router.open("scorecard")
+    self.navigationController << ScorecardController.alloc.init
   end
 
 end

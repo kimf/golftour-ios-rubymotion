@@ -5,16 +5,16 @@ class LoginController < Formotion::FormController
     form = Formotion::Form.new({
       sections: [{
         rows: [{
-          title: "Email",
+          title: "Epost",
           key: :email,
-          placeholder: "me@mail.com",
+          placeholder: "me@mail.se",
           type: :email,
           auto_correction: :no,
           auto_capitalization: :none
         }, {
-          title: "Password",
+          title: "Lösenord",
           key: :password,
-          placeholder: "required",
+          placeholder: "**********",
           type: :string,
           secure: true
         }],
@@ -43,9 +43,7 @@ class LoginController < Formotion::FormController
     SVProgressHUD.showWithStatus("Loggar in", maskType:SVProgressHUDMaskTypeGradient)
     AFMotion::Client.shared.post("authenticate", email: email, password: password) do |result|
       if result.success?
-        App::Persistence['current_player_id'] = result.object["id"]
-        App::Persistence['authToken'] = result.object["auth_token"]
-        App.delegate.router.open("leaderboard", false)
+        App.delegate.login(result.object["auth_token"], result.object["id"])
         SVProgressHUD.dismiss
       elsif result.failure?
         SVProgressHUD.dismiss
