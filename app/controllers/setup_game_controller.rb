@@ -1,14 +1,9 @@
 class SetupGameController < UIViewController
   stylesheet :base
-  attr_accessor :course, :players
+  attr_accessor :course, :selected_players
 
   layout :root do
-    self.title = "Spela golf"
-
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-        UIBarButtonSystemItemStop,
-        target: self,
-        action: :cancel)
+    self.title = "Välj Spelare"
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
       UIBarButtonSystemItemAdd,
@@ -20,19 +15,23 @@ class SetupGameController < UIViewController
     @players_table.delegate   = self
 
     subview(@players_table, :players_table)
-
-    @play_button = subview(UIButton, :play_button).on(:touch){ play }
-    @play_button.hidden = true
-
-    @change_course_button = subview(UIButton, :change_course_button).on(:touch){ select_course }
-
-    @current_course_label = subview(UILabel, :current_course_label)
-
-    select_course if @course.nil?
+    subview(UIView, :button_bg) do
+      @play_button = subview(UIButton, :play_button).on(:touch){ play }
+    end
+    @current_course_label = subview(UILabel, :current_course_label, text: @course.name)
   end
 
-  def select_course
-    self.navigationController << CoursesController.alloc.init
+  def initWithCourse(course)
+    init.tap do
+      @course   = course
+      @selected_players = [App.delegate.current_player]
+      @players = Player.order(:name).all
+
+      @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
+        @players << notification.object
+        toggle_players(notification.object)
+      end
+    end
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
@@ -43,30 +42,30 @@ class SetupGameController < UIViewController
     fresh_cell.tap do |cell|
       s  = @players[indexPath.row]
       cell.textLabel.text = "#{s.name}"
-      cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
+      if @selected_players.include?(s)
+        cell.accessoryType = UITableViewCellAccessoryCheckmark
+        cell.stylename = :selected
+      else
+        cell.accessoryType = UITableViewCellAccessoryNone
+        cell.stylename = :default_cell
+      end
     end
   end
 
-  def layoutDidLoad
-    super
-    @players = []
-    @course  = nil
-
-    @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
-      @players << notification.object
-      show_hide_buttons
-      @players_table.reloadData
-    end
-
-    @course_observer = App.notification_center.observe CourseWasSelectedNotification do |notification|
-      @course = notification.object
-      @current_course_label.text = @course.name
-      show_hide_buttons
-    end
+  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    toggle_players(@players[indexPath.row])
   end
 
-  def show_hide_buttons
-    if @players.length > 0 && !@course.nil?
+
+  def toggle_players(player)
+    @selected_players.include?(player) ? @selected_players.delete(player) : @selected_players << player
+    toggle_buttons
+    @players_table.reloadData
+  end
+
+  def toggle_buttons
+    if @selected_players.length > 0
       @play_button.hidden = false
     else
       @play_button.hidden = true
@@ -75,15 +74,21 @@ class SetupGameController < UIViewController
 
 
   def add_player
-    self.navigationController << PlayersController.alloc.init
+    self.navigationController << NewPlayerController.alloc.init
   end
 
   def play
-    self.navigationController << RoundController.alloc.initWithCourseAndPlayers(@course, @players)
-  end
+    leftController   = SelectHoleController.alloc.initWithCourse(@course)
+    centerController = UINavigationController.alloc.initWithRootViewController(
+      RoundController.alloc.initWithCourseAndPlayers(@course, @selected_players)
+    )
 
-  def cancel
-    App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
+    deckController  = IIViewDeckController.alloc.initWithCenterViewController(
+                              centerController,
+                              leftViewController: leftController
+                        )
+    deckController.rightSize = 100
+    self.navigationController.presentModalViewController(deckController, animated:true)
   end
 
 

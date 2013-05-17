@@ -1,4 +1,4 @@
-class CoursesController < UITableViewController
+class SelectCourseController < UITableViewController
   include Refreshable
 
   stylesheet :base
@@ -14,10 +14,10 @@ class CoursesController < UITableViewController
     @filtered_courses = []
     @courses = Course.order(:name).all
 
-    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-    #    UIBarButtonSystemItemStop,
-    #    target: self,
-    #    action: :cancel)
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+       UIBarButtonSystemItemStop,
+       target: self,
+       action: :cancel)
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
        UIBarButtonSystemItemAdd,
@@ -34,7 +34,7 @@ class CoursesController < UITableViewController
     on_refresh do
       UIActionSheet.alert 'Vill du synca banor, det tar lite tid?', buttons: ['Ja fö fan', 'Näää!'],
         cancel: proc { reload_data },
-        destructive: proc { end_refreshing }
+        destructive: proc { cancel_refreshing }
     end
   end
 
@@ -99,7 +99,8 @@ class CoursesController < UITableViewController
           end
           existing_course.save
         end
-
+        Course.serialize_to_file
+        Hole.serialize_to_file
         @courses = Course.order(:name).all
         self.tableView.reloadData
       elsif result.failure?
@@ -113,7 +114,7 @@ class CoursesController < UITableViewController
   end
 
   def cancel
-    self.navigationController.pop
+    App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
   end
 
   def new_course
@@ -130,9 +131,9 @@ class CoursesController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+    courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    #self.navigationController.rootViewController.course = @courses[indexPath.row]
-    self.navigationController.pop
+    self.navigationController << SetupGameController.alloc.initWithCourse(courses[indexPath.row])
   end
 
   private

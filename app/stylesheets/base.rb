@@ -12,9 +12,9 @@ Teacup::Stylesheet.new :base do
   # BIG ASS BUTTONS
   # ------------------------------------------------------------------------------------------
   style :big_button,
-    top: 450,
+    top: lambda { superview.bounds.size.height - 60 },
     left: 20,
-    width: 280,
+    width: lambda { superview.bounds.size.width - 40 },
     height: 40,
     backgroundColor: "#9b99a1".to_color,
     titleColor: "#FFFFFF".to_color,
@@ -24,9 +24,17 @@ Teacup::Stylesheet.new :base do
     }
 
   style :play_button, extends: :big_button,
+    top: 10,
     backgroundColor: "#68a15f".to_color,
-    title: "Starta Runda!"
+    title: "BÖRJA SPELA"
 
+
+  style :button_bg,
+    left: 0,
+    top: 444,
+    height: 60,
+    width: '100%',
+    backgroundColor: "#cccccc".to_color
 
 
   # SETUP GAME
@@ -35,21 +43,14 @@ Teacup::Stylesheet.new :base do
   style :current_course_label, extends: :label,
     left: 0,
     top: 0,
-    height: 40,
-    width: 220,
+    height: 44,
+    width: '100%',
     font: 'OpenSans-Bold'.uifont(14),
-    textColor: "#383838".to_color,
-    backgroundColor: "#e0e0e0".to_color
+    textColor: "#eeeeee".to_color,
+    backgroundColor: "#4a6288".to_color,
+    textAlignment: UITextAlignmentCenter
 
-  style :change_course_button,
-    backgroundColor: "#2d5389".to_color,
-    titleColor: "#FFFFFF".to_color,
-    font: 'OpenSans-Bold'.uifont(14),
-    title: "Byt Bana",
-    top: 0,
-    left: 220,
-    width: 100,
-    height: 40
+  style :current_hole_label, extends: :current_course_label
 
 
   # TABLES
@@ -58,13 +59,9 @@ Teacup::Stylesheet.new :base do
     backgroundColor: "#eeeeee".to_color,
     separatorStyle: UITableViewCellSeparatorStyleNone
 
-  style :players_table,
-    backgroundColor: "#eeeeee".to_color,
-    separatorStyle: UITableViewCellSeparatorStyleNone,
-    top: 100,
-    height: 200
-
-  style :empty_cell
+  style :players_table, extends: :table,
+    top: 44,
+    height: 400
 
   style :default_cell,
     textColor: "#2b2c2e".to_color,
@@ -84,7 +81,7 @@ Teacup::Stylesheet.new :base do
     autoresizingMask: UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth
 
   style :selected,
-    backgroundColor: "#1b8ad4".to_color
+    backgroundColor: "#ffeebb".to_color
 
   # LEADERBOARD TABLE
   # ------------------------------------------------------------------------------------------
@@ -95,23 +92,23 @@ Teacup::Stylesheet.new :base do
   style :header_label, extends: :label,
     top: 0,
     height: 22,
-    width: 40,
+    width: 60,
     font: 'OpenSans-Bold'.uifont(10),
     textColor: "#FFFFFF".to_color,
     backgroundColor: "#4a6288".to_color
 
   style :player_label, extends: :header_label,
     left: 40,
-    text: "Spelare"
+    text: "SPELARE"
 
   style :round_label, extends: :header_label,
-    left: 240,
-    text: "Rundor",
+    left: 200,
+    text: "RUNDOR",
     textAlignment: UITextAlignmentCenter
 
   style :points_label, extends: :header_label,
-    left: 280,
-    text: "Poäng",
+    left: 260,
+    text: "POÄNG",
     textAlignment: UITextAlignmentCenter
 
 
@@ -120,9 +117,10 @@ Teacup::Stylesheet.new :base do
   style :cell_label,
     top: 0,
     height: 43,
-    width: 40,
+    width: 60,
     font: 'OpenSans-Bold'.uifont(14),
-    backgroundColor: "#e6e6e6".to_color
+    backgroundColor: UIColor.clearColor
+    # backgroundColor: "#e6e6e6".to_color
 
   style :player_position_label, extends: :cell_label,
     left: 0,
@@ -132,14 +130,15 @@ Teacup::Stylesheet.new :base do
 
   style :player_name_label, extends: :cell_label,
     left: 40,
-    width: 220
+    width: 200
 
   style :player_rounds_label, extends: :cell_label,
-    left: 240,
-    textAlignment: UITextAlignmentCenter
+    left: 200,
+    textAlignment: UITextAlignmentCenter,
+    textColor: "#353739".to_color
 
   style :player_points_label, extends: :cell_label,
-    left: 280,
+    left: 260,
     textAlignment: UITextAlignmentCenter
 
 
@@ -199,7 +198,7 @@ Teacup::Stylesheet.new :base do
 
   style :logout_button,
     backgroundColor: "#101010".to_color,
-    title: "Logga ut",
+    title: "LOGGA UT",
     titleColor: "#eeeeee".to_color,
     font: 'OpenSans-Bold'.uifont(16),
     width: 280,

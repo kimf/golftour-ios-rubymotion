@@ -22,4 +22,9 @@ module Refreshable
     @refresh.attributedTitle = NSAttributedString.alloc.initWithString("Uppdaterades senast: #{Time.now.strftime("%H:%M")}")
     @refresh.endRefreshing
   end
+
+  def cancel_refreshing
+    return unless @refresh
+    @refresh.endRefreshing
+  end
 end

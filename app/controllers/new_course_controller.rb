@@ -4,12 +4,6 @@ class NewCourseController < UIViewController
 
   layout do
     self.title = "New Course"
-    closeButton = UIBarButtonItem.alloc.initWithTitle("Close", style: UIBarButtonItemStylePlain, target:self, action:'close')
-    self.navigationItem.leftBarButtonItem = closeButton
-  end
-
-  def close
-    navigationController.dismissViewControllerAnimated(true, completion: lambda{})
   end
 
   # def save

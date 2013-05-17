@@ -7,12 +7,12 @@ class LeaderboardController < UITableViewController
 
   layout :table do
     self.title = "Simple Golftour"
-    @players = Player.order{|a, b| a.points <=> b.points}.all
+    @players = Player.order{|a, b| b.points <=> a.points}.all
 
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithTitle(
-                                              "left",
+                                              "=",
                                               style: UIBarButtonItemStyleBordered,
-                                              target: viewDeckController,
+                                              target: App.delegate.deckController,
                                               action: 'toggleLeftView'
                                             )
 
@@ -37,17 +37,27 @@ class LeaderboardController < UITableViewController
     @players.count || 0
   end
 
-  def tableView(tableView, cellForRowAtIndexPath:indexPath)
+  def tableView(table_view, cellForRowAtIndexPath:indexPath)
     p = @players[indexPath.row]
-    subview(UITableViewCell, :empty_cell) do |cell|
-      subview(UILabel, :player_position_label, text: "#{indexPath.row + 1}")
-      subview(UILabel, :player_name_label, text: "#{p.name}")
-      subview(UILabel, :player_rounds_label, text: "#{p.rounds}")
-      subview(UILabel, :player_points_label, text: "#{p.points}")
-      subview(UIView, :bottom_line)
+    cell_identifier = "player_cell_#{p.id}"
+    cell = table_view.dequeueReusableCellWithIdentifier(cell_identifier)
 
-      cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
+    unless cell
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault,
+                          reuseIdentifier: cell_identifier)
+
+      layout(cell.contentView) do
+        subview(UILabel, :player_position_label, text: "#{indexPath.row + 1}")
+        subview(UILabel, :player_name_label, text: "#{p.name}")
+        subview(UILabel, :player_rounds_label, text: "#{p.rounds}")
+        subview(UILabel, :player_points_label, text: "#{p.points}")
+        subview(UIView, :bottom_line)
+        cell.setSelectionStyle(UITableViewCellSelectionStyleNone)
+      end
+      cell.contentView.stylename = :selected if App.delegate.current_player.id == p.id
     end
+
+    return cell
   end
 
   def tableView(tableView, viewForHeaderInSection:section)
@@ -60,7 +70,7 @@ class LeaderboardController < UITableViewController
 
 
   def play
-    modal_controller = UINavigationController.alloc.initWithRootViewController(SetupGameController.alloc.init)
+    modal_controller = UINavigationController.alloc.initWithRootViewController(SelectCourseController.alloc.init)
     App.delegate.window.rootViewController.presentModalViewController(modal_controller, animated:true)
   end
 
@@ -98,7 +108,7 @@ class LeaderboardController < UITableViewController
             existing_player.save
           end
         end
-
+        Player.serialize_to_file
         @players = Player.order{|a, b| a.points <=> b.points}.all
         self.tableView.reloadData
         SVProgressHUD.dismiss

@@ -4,14 +4,6 @@ class NewPlayerController < Formotion::FormController
 
   layout do
     self.title = "Ny Spelare"
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-        UIBarButtonSystemItemStop,
-        target: self,
-        action: :cancel)
-  end
-
-  def cancel
-    self.navigationController.pop
   end
 
   def init
@@ -69,7 +61,7 @@ class NewPlayerController < Formotion::FormController
         )
 
         App.notification_center.post PlayerWasAddedNotification, player
-        self.navigationController.pop :root
+        self.navigationController.pop
       elsif result.failure?
         App.alert("Kunde inte spara...")
       end
