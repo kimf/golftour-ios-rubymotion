@@ -1,4 +1,5 @@
 class CoursesController < UITableViewController
+  include Refreshable
 
   stylesheet :base
 
@@ -8,27 +9,33 @@ class CoursesController < UITableViewController
   end
 
   def layoutDidLoad
-   self.title = "Välj bana"
-   @search_results = []
-   @filtered_courses = []
-   @courses = Course.order(:name).all
+    self.title = "Välj bana"
+    @search_results = []
+    @filtered_courses = []
+    @courses = Course.order(:name).all
 
-   self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-       UIBarButtonSystemItemStop,
+    # self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+    #    UIBarButtonSystemItemStop,
+    #    target: self,
+    #    action: :cancel)
+
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+       UIBarButtonSystemItemAdd,
        target: self,
-       action: :cancel)
+       action: :new_course)
 
-   self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-       UIBarButtonSystemItemRefresh,
-       target: self,
-       action: :sync)
+    search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
+    search_bar.delegate = self
+    view.addSubview(search_bar)
+    view.tableHeaderView = search_bar
 
-   search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
-   search_bar.delegate = self
-   view.addSubview(search_bar)
-   view.tableHeaderView = search_bar
+    reload_data if @courses.length == 0
 
-   reload_data if @courses.length == 0
+    on_refresh do
+      UIActionSheet.alert 'Vill du synca banor, det tar lite tid?', buttons: ['Ja fö fan', 'Näää!'],
+        cancel: proc { reload_data },
+        destructive: proc { end_refreshing }
+    end
   end
 
   def searchBarSearchButtonClicked(search_bar)
@@ -95,30 +102,23 @@ class CoursesController < UITableViewController
 
         @courses = Course.order(:name).all
         self.tableView.reloadData
-
-        SVProgressHUD.dismiss
       elsif result.failure?
-        SVProgressHUD.dismiss
         App.alert(result.error.localizedDescription)
       end
+      end_refreshing
+      SVProgressHUD.dismiss
     end
 
     return true
   end
 
   def cancel
-    App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
+    self.navigationController.pop
   end
 
-  def sync
-    UIActionSheet.alert 'Vill du synca banor, det tar lite tid?', buttons: ['Ja fö fan', 'Näää!'],
-      cancel: proc { reload_data },
-      destructive: proc {}
+  def new_course
+    self.navigationController << NewCourseController.alloc.init
   end
-
-  # def new
-  #   self.navigationController << NewCourseController.alloc.init
-  # end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     courses = @isFiltered ? @filtered_courses : @courses
@@ -130,10 +130,9 @@ class CoursesController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    #courses = @isFiltered ? @filtered_courses : @courses
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    #App::Persistence['current_course_id'] = courses[indexPath.row].id
-    self.navigationController << SetupGameController.alloc.init
+    #self.navigationController.rootViewController.course = @courses[indexPath.row]
+    self.navigationController.pop
   end
 
   private

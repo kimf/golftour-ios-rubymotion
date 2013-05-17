@@ -58,7 +58,7 @@ class NewPlayerController < Formotion::FormController
     AFMotion::Client.shared.post("players?auth_token=#{App.delegate.auth_token}", name: name, email: email, hcp: hcp) do |result|
       if result.success?
         player = result.object["player"]
-        Player.create(
+        player = Player.create(
           id: player["id"].to_i,
           name: player["name"],
           points: player["points"].to_i,
@@ -68,8 +68,8 @@ class NewPlayerController < Formotion::FormController
           email: player["email"]
         )
 
-        App.notification_center.post PlayerWasAddedNotification
-        self.navigationController.pop
+        App.notification_center.post PlayerWasAddedNotification, player
+        self.navigationController.pop :root
       elsif result.failure?
         App.alert("Kunde inte spara...")
       end

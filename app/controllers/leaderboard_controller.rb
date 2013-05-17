@@ -6,7 +6,7 @@ class LeaderboardController < UITableViewController
   attr_accessor :players
 
   layout :table do
-    self.title = "Ledartavla"
+    self.title = "Simple Golftour"
     @players = Player.order{|a, b| a.points <=> b.points}.all
 
     self.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithTitle(
@@ -32,12 +32,6 @@ class LeaderboardController < UITableViewController
       load_data
     end
   end
-
-  def viewDidLoad
-    super
-    tableView.scrollsToTop = false
-  end
-
 
   def tableView(tableView, numberOfRowsInSection:section)
     @players.count || 0
@@ -66,7 +60,7 @@ class LeaderboardController < UITableViewController
 
 
   def play
-    modal_controller = UINavigationController.alloc.initWithRootViewController(CoursesController.alloc.init)
+    modal_controller = UINavigationController.alloc.initWithRootViewController(SetupGameController.alloc.init)
     App.delegate.window.rootViewController.presentModalViewController(modal_controller, animated:true)
   end
 

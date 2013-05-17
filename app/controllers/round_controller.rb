@@ -1,15 +1,9 @@
-class PlayingController < UIViewController
+class RoundController < UIViewController
   stylesheet :base
   attr_accessor :course, :players, :holes, :current_hole, :control
 
   layout do
-    @course = Course.where(:id).eq(App::Persistence['current_course_id']).first
-    self.title = @course.name
-
-    @players = []
-    App::Persistence['current_player_ids'].each do |id|
-      @players << Player.where(:id).eq(id).first
-    end
+    self.title = self.course.name
 
     # @course.holes.each do |hole|
     #   subview(UIView, :hole, nr: hole.nr)
@@ -21,6 +15,13 @@ class PlayingController < UIViewController
         UIBarButtonSystemItemCompose,
         target: self,
         action: :show_scorecard)
+  end
+
+  def initWithCourseAndPlayers(course, players)
+    init.tap do
+      @course   = course
+      @players  = players
+    end
   end
 
   def show_scorecard

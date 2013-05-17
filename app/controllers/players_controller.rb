@@ -10,6 +10,11 @@ class PlayersController < UITableViewController
     super
     self.title = "Spelare"
 
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+        UIBarButtonSystemItemDone,
+        target: self,
+        action: :cancel)
+
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
         UIBarButtonSystemItemAdd,
@@ -17,7 +22,7 @@ class PlayersController < UITableViewController
         action: :add_player)
 
     @reload_observer = App.notification_center.observe PlayerWasAddedNotification do |notification|
-      @players = Player.order(:name).all
+      @players << notification.object
       self.tableView.reloadData
     end
   end
@@ -36,11 +41,7 @@ class PlayersController < UITableViewController
 
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    player = @players[indexPath.row]
-    new_array = App::Persistence['current_player_ids'].collect.to_a
-    new_array << player.id
-    App::Persistence['current_player_ids'] = new_array
-    App.notification_center.post PlayerWasAddedNotification
+    App.notification_center.post PlayerWasAddedNotification, @players[indexPath.row]
     self.navigationController.pop
   end
 
@@ -49,12 +50,15 @@ class PlayersController < UITableViewController
     self.navigationController << NewPlayerController.alloc.init
   end
 
+  def cancel
+    self.navigationController.pop
+  end
+
   private
     def fresh_cell
       tableView.dequeueReusableCellWithIdentifier('Cell') ||
       UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:'Cell').tap do |cell|
-        layout cell, :cell do
-          subview(UIView, :top_line)
+        layout cell, :default_cell do
           subview(UIView, :bottom_line)
         end
         cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))

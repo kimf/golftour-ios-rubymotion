@@ -28,19 +28,49 @@ Teacup::Stylesheet.new :base do
     title: "Starta Runda!"
 
 
-  # TABLES
+
+  # SETUP GAME
   # ------------------------------------------------------------------------------------------
 
+  style :current_course_label, extends: :label,
+    left: 0,
+    top: 0,
+    height: 40,
+    width: 220,
+    font: 'OpenSans-Bold'.uifont(14),
+    textColor: "#383838".to_color,
+    backgroundColor: "#e0e0e0".to_color
+
+  style :change_course_button,
+    backgroundColor: "#2d5389".to_color,
+    titleColor: "#FFFFFF".to_color,
+    font: 'OpenSans-Bold'.uifont(14),
+    title: "Byt Bana",
+    top: 0,
+    left: 220,
+    width: 100,
+    height: 40
+
+
+  # TABLES
+  # ------------------------------------------------------------------------------------------
   style :table,
     backgroundColor: "#eeeeee".to_color,
     separatorStyle: UITableViewCellSeparatorStyleNone
 
+  style :players_table,
+    backgroundColor: "#eeeeee".to_color,
+    separatorStyle: UITableViewCellSeparatorStyleNone,
+    top: 100,
+    height: 200
 
   style :empty_cell
 
-  style :cell,
+  style :default_cell,
     textColor: "#2b2c2e".to_color,
-    font: 'OpenSans-Semibold'.uifont(14),
+    font: 'OpenSans-Semibold'.uifont(14)
+
+  style :cell, extends: :default_cell,
     detailTextLabel: {
       textColor: "#2b2c2e".to_color,
       font: 'OpenSans-Bold'.uifont(14),
@@ -173,7 +203,7 @@ Teacup::Stylesheet.new :base do
     titleColor: "#eeeeee".to_color,
     font: 'OpenSans-Bold'.uifont(16),
     width: 280,
-    height: 40,
+    height: 44,
     left: 0,
-    top: 508
+    top: 506
 end

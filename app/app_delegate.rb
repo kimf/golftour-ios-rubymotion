@@ -1,4 +1,5 @@
-PlayerWasAddedNotification = "PlayerWasAddedNotification"
+PlayerWasAddedNotification    = "PlayerWasAddedNotification"
+CourseWasSelectedNotification = "CourseWasSelectedNotification"
 
 class AppDelegate
   attr_accessor :window, :deckController, :centerController, :leftController

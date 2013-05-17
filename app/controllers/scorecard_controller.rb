@@ -19,10 +19,6 @@ class ScorecardController < UIViewController
     UIActionSheet.alert 'Vill du verkligen avbryta rundan?', buttons: ['Näää', 'Ja jag är trött!'],
       cancel: proc { },
       destructive: proc {
-        App::Persistence['current_course_id'] = nil
-        App::Persistence['current_player_ids'] = nil
-        App::Persistence['current_hole_id'] = nil
-        App::Persistence['active_round'] = false
         App.delegate.window.rootViewController.dismissModalViewControllerAnimated(true, completion:nil)
       }
   end
