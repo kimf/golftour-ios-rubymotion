@@ -13,8 +13,8 @@ class SetupGameController < UIViewController
     @players_table = UITableView.alloc.initWithFrame(view.frame, style: UITableViewStylePlain)
     @players_table.dataSource = self
     @players_table.delegate   = self
-
     subview(@players_table, :players_table)
+
     subview(UIView, :button_bg) do
       @play_button = subview(UIButton, :play_button).on(:touch){ play }
     end
@@ -43,10 +43,10 @@ class SetupGameController < UIViewController
       s  = @players[indexPath.row]
       cell.textLabel.text = "#{s.name}"
       if @selected_players.include?(s)
-        cell.accessoryType = UITableViewCellAccessoryCheckmark
+        cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("checkbox.png"))
         cell.stylename = :selected
       else
-        cell.accessoryType = UITableViewCellAccessoryNone
+        cell.accessoryView = nil
         cell.stylename = :default_cell
       end
     end
@@ -78,17 +78,10 @@ class SetupGameController < UIViewController
   end
 
   def play
-    leftController   = SelectHoleController.alloc.initWithCourse(@course)
-    centerController = UINavigationController.alloc.initWithRootViewController(
+    scoringController = ScoringController.alloc.initWithRoundController(
       RoundController.alloc.initWithCourseAndPlayers(@course, @selected_players)
     )
-
-    deckController  = IIViewDeckController.alloc.initWithCenterViewController(
-                              centerController,
-                              leftViewController: leftController
-                        )
-    deckController.rightSize = 100
-    self.navigationController.presentModalViewController(deckController, animated:true)
+    self.navigationController.presentModalViewController(scoringController, animated:true)
   end
 
 

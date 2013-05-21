@@ -22,8 +22,10 @@ Motion::Project::App.setup do |app|
   end
 
   app.frameworks += [
-    'QuartzCore'
+    'QuartzCore',
+    'CoreLocation'
   ]
+
 
   app.pods do
     pod 'SVProgressHUD'

@@ -43,12 +43,32 @@ class LoginController < Formotion::FormController
     SVProgressHUD.showWithStatus("Loggar in", maskType:SVProgressHUDMaskTypeGradient)
     AFMotion::Client.shared.post("authenticate", email: email, password: password) do |result|
       if result.success?
-        App.delegate.login(result.object["auth_token"], result.object["id"])
+        id = result.object["id"]
+        name = result.object["name"]
+
+        if !Player.where(:id).eq(id).first
+          create_player(id, name)
+        end
+
+        App.delegate.login(result.object["auth_token"], id)
         SVProgressHUD.dismiss
       elsif result.failure?
         SVProgressHUD.dismiss
         App.alert("Kunde inte logga in...")
       end
     end
+  end
+
+  def create_player(id, name)
+    Player.create(
+      id: id,
+      name: name,
+      points: 0,
+      rounds: 0,
+      average_points: 0,
+      hcp: 0,
+      email: ""
+    )
+    Player.serialize_to_file
   end
 end

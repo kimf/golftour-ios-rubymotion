@@ -1,0 +1,148 @@
+left -320
+right 320
+left -640
+left 0
+left 1300
+left 320
+right 320
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+tree
+a 4
+tree
+a
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.slide(:right, 20)
+end
+a.slide(:left, 20) do
+a.backgroundColor = "red".to_colora.slide(:right, 20)
+end
+tree
+a 3
+a.view
+a.subviews
+a 4
+new = a.uiimage
+a 3
+a.subviews << new
+UIView.animation_chain{ a.slide(:left, 320)}.and_then{a.slide(:up, 1000)}.and_then{ a.slide(:right, 640) }.and_then{ a.slide(:down, 1000)}.and_then{ a.slide(:left, 320)}.start
+tree
+a 28
+a.shake
+a.shake
+a.shake
+a.shake
+a.fade_out
+a.fade_in
+a.tumble
+a.tumble
+a.tumble
+a.tumble
+a.tumble
+a.tumble
+a.tumble
+a.frame = [[0,0],[0,0]]
+a.fade_in
+a.reset
+exit
+UIView.animation_chain{
+a.slide(:left, 320)
+}.and_then{
+a.move_to([0, 640])
+}.and_then{
+a.slide(:left, 320)
+}.start
+UIView.animation_chain{ a.slide(:left, 320) }.and_then{ a.move_to([0, 640]) }.and_then{ a.slide(:left, 320) }.start
+tree
+a 28
+UIView.animation_chain{ a.slide(:left, 320) }.and_then{ a.move_to([0, 640]) }.and_then{ a.slide(:left, 320) }.start
+tree
+a 28
+UIView.animation_chain { a.slide(:left) }.and_then { a.move_to([0, 640]) }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.move_to([0, 640]) }.and_then { a.slide(:left) }.start
+a.move_to [0,0]
+a.move_to [0,320]
+a.move_to [0,0]
+a.move_to [320,0]
+a.move_to [320,0]
+a.slide :left
+UIView.animation_chain { a.slide(:left) }.and_then { a.move_to([320, 0]) }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.move_to([320, 0]) }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.fade_out; a.move_to([320, 0]); a.fade_in }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.fade_out; a.move_to([320, 0]); a.fade_in }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.fade_out; a.move_to([320, 0]); a.fade_in }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.fade_out; a.move_to([320, 0]); a.fade_in }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then { a.fade_out; a.move_to([320, 0]); a.fade_in }.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then{a.fade_out}.and_then { a.move_to([320, 0]) }.and_then{a.fade_in}.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then{a.fade_out}.and_then { a.move_to([320, 0]) }.and_then{a.fade_in}.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then{a.fade_out}.and_then { a.move_to([320, 0]) }.and_then{a.fade_in}.and_then { a.slide(:left) }.start
+UIView.animation_chain { a.slide(:left) }.and_then{a.fade_out}.and_then { a.move_to([320, 0]) }.and_then{a.fade_in}.and_then { a.slide(:left) }.start
+a.view
+aa
+a
+a.subviews
+exit
+tree
+a 4
+a.superview
+a.superview.subviews
+a.superview.subviews << a.uiimage
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+Hole.first.length
+Hole.last.length
+exit
+exit
+336.length
+"336".length
+exit
+exit

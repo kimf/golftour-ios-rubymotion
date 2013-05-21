@@ -90,10 +90,11 @@ class SelectCourseController < UITableViewController
               existing_hole.id         = hole["id"]
               existing_hole.nr         = hole["nr"]
               existing_hole.par        = hole["par"]
-              existing_hole.length     = hole["length"]
+              existing_hole.meters     = hole["length"]
               existing_hole.hcp        = hole["hcp"]
               existing_hole.lat        = hole["lat"]
               existing_hole.lng        = hole["lng"]
+              puts existing_hole.meters
               existing_course.holes << existing_hole
             end
           end

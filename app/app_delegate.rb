@@ -12,6 +12,7 @@ class AppDelegate
       operation :json
     end
 
+    #READ DATA FROM FILES
     Player.deserialize_from_file('players.dat')
     Course.deserialize_from_file('courses.dat')
     Hole.deserialize_from_file('holes.dat')
@@ -66,6 +67,9 @@ class AppDelegate
     @deckController.rightSize = 100
 
     return @deckController
+    # ScoringController.alloc.initWithRoundController(
+    #   RoundController.alloc.initWithCourseAndPlayers(Course.first, Player.all[0..4])
+    # )
   end
 
 
@@ -73,8 +77,9 @@ class AppDelegate
     #UIApplication.sharedApplication.setStatusBarHidden true, animated:false
     #UITabBar.appearance.tintColor = "#123456".to_color
     #UITabBar.appearance.selectionIndicatorImage = UIImage.imageNamed("someimage.png")
-    UINavigationBar.appearance.tintColor = "#1b8ad4".to_color
-    UISearchBar.appearance.tintColor = "#1b8ad4".to_color
+    UINavigationBar.appearance.tintColor = "#447ca5".to_color
+    UISearchBar.appearance.tintColor = "#447ca5".to_color
+    UIPageControl.appearance.backgroundColor = "#447ca5".to_color
     #UIToolbar.appearance.tintColor = "#1b8ad4".to_color
   end
 

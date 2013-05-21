@@ -3,9 +3,10 @@ class MenuController < UIViewController
 
   layout :menu do
     subview(UILabel, :navigation_bar) do
-      avatar = UIImage.imageNamed("1.png")
-      subview(UIImageView, :avatar, image: avatar)
-      subview(UILabel, :current_player, text: "KIM FRANSMAN")
+      avatar = UIImage.imageNamed("avatar.png")
+      @avatar = subview(UIImageView, :avatar, image: avatar)
+      @avatar.url = {url: 'http://simplegolftour.herokuapp.com/assets/avatars/3.png', placeholder: avatar}
+      subview(UILabel, :current_player, text: App.delegate.current_player.name.upcase)
     end
 
     subview(UILabel, :list_header_label, text: "TOURER")

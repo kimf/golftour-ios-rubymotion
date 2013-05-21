@@ -4,7 +4,7 @@ class Hole
 
   columns :nr         => :integer,
           :par        => :integer,
-          :length     => :integer,
+          :meters     => :integer,
           :hcp        => :integer,
           :lat        => :string,
           :lng        => :string
