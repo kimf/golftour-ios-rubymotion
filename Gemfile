@@ -1,12 +1,12 @@
 source "https://rubygems.org"
 gem 'rake'
-gem 'bubble-wrap', '1.3.0'
-gem 'teacup'
-gem 'sugarcube'
+gem 'bubble-wrap'
+gem 'teacup', :git => 'https://github.com/rubymotion/teacup.git'
+gem 'sugarcube', :git => 'https://github.com/rubymotion/sugarcube.git', :require => 'sugarcube-classic'
 gem 'formotion'
-gem 'motion_model', git: 'git@github.com:kimf/MotionModel.git'
+gem 'motion_model'
 
 gem 'afmotion'
-gem 'motion-cocoapods', '1.3.0.rc1'
+gem 'motion-cocoapods'
 
 gem 'motion-testflight'

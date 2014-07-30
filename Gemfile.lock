@@ -1,73 +1,67 @@
 GIT
-  remote: git@github.com:kimf/MotionModel.git
-  revision: 87531b6373aa83e6a9ea055822852127657c2d5d
+  remote: https://github.com/rubymotion/sugarcube.git
+  revision: 4fb20590784245a96640ddbfc13fe4292c065baf
   specs:
-    motion_model (0.4.4)
-      bubble-wrap (= 1.3.0)
-      motion-support (>= 0.2.2)
+    sugarcube (1.5.5)
+
+GIT
+  remote: https://github.com/rubymotion/teacup.git
+  revision: ae3d55ca40c69da1547c1ab89a977fe7854363b5
+  specs:
+    teacup (2.2.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.13)
-      i18n (= 0.6.1)
+    activesupport (3.2.17)
+      i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    addressable (2.3.4)
-    afmotion (0.4)
-      motion-cocoapods (>= 1.2.1)
-    bubble-wrap (1.3.0)
-    claide (0.2.0)
-    cocoapods (0.19.1)
-      activesupport (~> 3.2.13)
-      claide (~> 0.2.0)
-      cocoapods-core (= 0.19.1)
-      cocoapods-downloader (~> 0.1.0)
+    afmotion (2.1.2)
+      motion-cocoapods (~> 1.4.0)
+      motion-require (>= 0.1)
+    bubble-wrap (1.5.0)
+    claide (0.5.0)
+    cocoapods (0.31.1)
+      activesupport (>= 3.2.15, < 4)
+      claide (~> 0.5.0)
+      cocoapods-core (= 0.31.1)
+      cocoapods-downloader (~> 0.4.1)
+      cocoapods-try (~> 0.2.0)
       colored (~> 1.2)
       escape (~> 0.0.4)
-      faraday (~> 0.8.1)
-      json (~> 1.7.3)
-      octokit (~> 1.7)
-      open4 (~> 1.3.0)
-      rake (~> 10.0.0)
-      xcodeproj (~> 0.5.5)
-    cocoapods-core (0.19.1)
-      activesupport (~> 3.2.13)
-      rake (~> 10.0.0)
-    cocoapods-downloader (0.1.0)
+      json_pure (~> 1.8)
+      nap (~> 0.5)
+      open4 (~> 1.3)
+      xcodeproj (~> 0.16.0)
+    cocoapods-core (0.31.1)
+      activesupport (>= 3.2.15, < 4)
+      fuzzy_match (~> 2.0.4)
+      json_pure (~> 1.8)
+      nap (~> 0.5)
+    cocoapods-downloader (0.4.1)
+    cocoapods-try (0.2.0)
     colored (1.2)
     escape (0.0.4)
-    faraday (0.8.7)
-      multipart-post (~> 1.1)
-    faraday_middleware (0.9.0)
-      faraday (>= 0.7.4, < 0.9)
-    formotion (1.3.1)
+    formotion (1.3)
       bubble-wrap (>= 1.1.4)
-      motion-require (~> 0.0.3)
-    hashie (2.0.5)
-    i18n (0.6.1)
-    json (1.7.7)
-    motion-cocoapods (1.3.0.rc1)
-      cocoapods (>= 0.17.0)
-    motion-require (0.0.6)
-    motion-support (0.2.4)
+    fuzzy_match (2.0.4)
+    i18n (0.6.9)
+    json_pure (1.8.1)
+    motion-cocoapods (1.4.0)
+      cocoapods (>= 0.26.2)
+    motion-require (0.2.0)
+    motion-support (0.2.6)
       motion-require (>= 0.0.6)
     motion-testflight (1.5)
-    multi_json (1.7.3)
-    multipart-post (1.2.0)
-    netrc (0.7.7)
-    octokit (1.24.0)
-      addressable (~> 2.2)
-      faraday (~> 0.8)
-      faraday_middleware (~> 0.9)
-      hashie (~> 2.0)
-      multi_json (~> 1.3)
-      netrc (~> 0.7.7)
-    open4 (1.3.0)
-    rake (10.0.4)
-    sugarcube (0.20.21)
-    teacup (2.0.2)
-    xcodeproj (0.5.5)
-      activesupport (~> 3.2.13)
+    motion_model (0.5.1)
+      bubble-wrap (>= 1.3.0)
+      motion-support (>= 0.1.0)
+    multi_json (1.9.2)
+    nap (0.7.0)
+    open4 (1.3.3)
+    rake (10.2.2)
+    xcodeproj (0.16.0)
+      activesupport (~> 3.0)
       colored (~> 1.2)
 
 PLATFORMS
@@ -75,11 +69,11 @@ PLATFORMS
 
 DEPENDENCIES
   afmotion
-  bubble-wrap (= 1.3.0)
+  bubble-wrap
   formotion
-  motion-cocoapods (= 1.3.0.rc1)
+  motion-cocoapods
   motion-testflight
-  motion_model!
+  motion_model
   rake
-  sugarcube
-  teacup
+  sugarcube!
+  teacup!

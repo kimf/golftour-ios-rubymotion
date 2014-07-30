@@ -19,10 +19,10 @@ class SelectCourseController < UITableViewController
        target: self,
        action: :cancel)
 
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
-       UIBarButtonSystemItemAdd,
-       target: self,
-       action: :new_course)
+    # self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(
+    #    UIBarButtonSystemItemAdd,
+    #    target: self,
+    #    action: :new_course)
 
     search_bar = UISearchBar.alloc.initWithFrame([[0,0],[320,44]])
     search_bar.delegate = self

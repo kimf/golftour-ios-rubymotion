@@ -1,8 +1,8 @@
 class NewPlayerController < Formotion::FormController
   attr_accessor :player, :name, :email, :hcp
-  stylesheet :base
 
-  layout do
+  def viewDidLoad
+    super
     self.title = "Ny Spelare"
   end
 

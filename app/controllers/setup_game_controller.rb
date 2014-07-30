@@ -13,6 +13,7 @@ class SetupGameController < UIViewController
     @players_table = UITableView.alloc.initWithFrame(view.frame, style: UITableViewStylePlain)
     @players_table.dataSource = self
     @players_table.delegate   = self
+    #@players_table.setScrollEnabled(false)
     subview(@players_table, :players_table)
 
     subview(UIView, :button_bg) do
@@ -92,7 +93,6 @@ class SetupGameController < UIViewController
         layout cell, :default_cell do
           subview(UIView, :bottom_line)
         end
-        cell.setSelectedBackgroundView(layout(UIView.alloc.init, :selected))
       end
     end
 

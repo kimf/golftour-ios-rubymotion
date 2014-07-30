@@ -230,7 +230,8 @@ Teacup::Stylesheet.new :base do
 
   style :player_points_label, extends: :cell_label,
     left: 260,
-    textAlignment: UITextAlignmentCenter
+    textAlignment: UITextAlignmentCenter,
+    font: 'OpenSans-Bold'.uifont(18)
 
 
 

@@ -12,7 +12,7 @@ require 'sugarcube-gestures'
 Motion::Project::App.setup do |app|
 
   app.name = 'Golftour'
-  app.sdk_version = "6.1"
+  app.sdk_version = "7.1"
   app.device_family = [:iphone]
   app.prerendered_icon = true
 
@@ -58,10 +58,4 @@ Motion::Project::App.setup do |app|
       app.seed_id = config['release']['seed_id']
     end
   end
-end
-
-desc "Open latest crash log"
-task :log do
-  p "open #{Dir[File.join(ENV['HOME'], "/Library/Logs/DiagnosticReports/.Scorerrest*")].last}"
-  exec "open #{Dir[File.join(ENV['HOME'], "/Library/Logs/DiagnosticReports/.Scorerrest*")].last}"
 end
