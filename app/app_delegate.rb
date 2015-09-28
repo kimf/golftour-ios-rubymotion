@@ -9,7 +9,7 @@ class AppDelegate
     AFNetworkActivityIndicatorManager.sharedManager.enabled=true
     AFMotion::Client.build_shared(NSBundle.mainBundle.objectForInfoDictionaryKey('API_URL')) do
       header "Accept", "application/json"
-      operation :json
+      response_serializer :json
     end
 
     #READ DATA FROM FILES
@@ -21,7 +21,7 @@ class AppDelegate
 
     self.window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
-    self.window.rootViewController = self.is_authenticated? ? deckController : LoginController.new
+    self.window.rootViewController = deckController #self.is_authenticated? ? deckController : LoginController.new
 
     self.window.makeKeyAndVisible
     true

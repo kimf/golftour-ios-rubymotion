@@ -6,7 +6,9 @@ class ScorecardController < UIViewController
 
   # LAYOUT
   # ------------------------------------------------------------------------------------------
-  layout :scorecard do
+  layout :scorecard
+
+  def teacup_layout
     subview(UIView, :navigation_bar) do
       subview(UILabel, :hole_label, text: @course.name)
       subview(UIButton, :end_round_button).on_tap do

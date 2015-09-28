@@ -3,9 +3,7 @@ class SelectHoleController < UITableViewController
 
   attr_accessor :course, :holes
 
-  layout :table do
-  end
-
+  layout :table
 
   def tableView(tableView, numberOfRowsInSection:section)
     @holes.count || 0

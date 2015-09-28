@@ -8,7 +8,9 @@ class HoleScoreController < UIViewController
                 :currentLocation,
                 :scorecardController
 
-  layout :root do
+  layout :root
+
+  def teacup_layout
     @players_table = UITableView.alloc.initWithFrame(view.frame, style: UITableViewStylePlain)
     @players_table.dataSource = self
     @players_table.delegate   = self

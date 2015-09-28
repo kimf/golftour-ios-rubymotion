@@ -5,8 +5,7 @@ class SelectCourseController < UITableViewController
 
   attr_accessor :courses, :filtered_courses, :isFiltered
 
-  layout :table do
-  end
+  layout :table
 
   def layoutDidLoad
     self.title = "Välj bana"

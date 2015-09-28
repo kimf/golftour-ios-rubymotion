@@ -5,7 +5,9 @@ class LeaderboardController < UITableViewController
 
   attr_accessor :players
 
-  layout :table do
+  layout :table
+
+  def teacup_layout
     self.title = "Simple Golftour"
     @players = Player.order{|a, b| b.points <=> a.points}.all
 

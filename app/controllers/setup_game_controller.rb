@@ -2,7 +2,9 @@ class SetupGameController < UIViewController
   stylesheet :base
   attr_accessor :course, :selected_players
 
-  layout :root do
+  layout :root
+
+  def teacup_layout
     self.title = "Välj Spelare"
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem.alloc.initWithBarButtonSystemItem(

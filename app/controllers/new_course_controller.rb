@@ -2,7 +2,7 @@ class NewCourseController < UIViewController
   stylesheet :base
   attr_accessor :course, :name
 
-  layout do
+  def teacup_layout
     self.title = "New Course"
   end
 

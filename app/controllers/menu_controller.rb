@@ -1,12 +1,13 @@
 class MenuController < UIViewController
   stylesheet :base
 
-  layout :menu do
+  layout :menu
+  def teacup_layout
     subview(UILabel, :navigation_bar) do
       avatar = UIImage.imageNamed("avatar.png")
       @avatar = subview(UIImageView, :avatar, image: avatar)
       @avatar.url = {url: 'http://simplegolftour.herokuapp.com/assets/avatars/3.png', placeholder: avatar}
-      subview(UILabel, :current_player, text: App.delegate.current_player.name.upcase)
+      subview(UILabel, :current_player, text: "Kim Fransman") #App.delegate.current_player.name.upcase)
     end
 
     subview(UILabel, :list_header_label, text: "TOURER")

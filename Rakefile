@@ -12,7 +12,7 @@ require 'sugarcube-gestures'
 Motion::Project::App.setup do |app|
 
   app.name = 'Golftour'
-  app.sdk_version = "7.1"
+  app.sdk_version = "9.0"
   app.device_family = [:iphone]
   app.prerendered_icon = true
 
@@ -33,29 +33,14 @@ Motion::Project::App.setup do |app|
     pod 'ViewDeck'
   end
 
-  if File.exists?('./config.yml')
-    config = YAML::load_file('./config.yml')
+  app.identifier = 'com.screeninteraction.golftour'
+  app.info_plist['API_URL']= 'http://192.168.0.104.xip.io:3000/api'
 
-    app.identifier = config['identifier']
-    app.info_plist['API_URL'] = config['api_url']
+  app.development do
+    #apple cert stuff
+    app.provisioning_profile = '/Users/kifr/Library/MobileDevice/Provisioning Profiles/09ea883b-154e-45ca-bf02-b8124e3407dc.mobileprovision'
+    app.codesign_certificate = 'iPhone Developer: Kim Fransman (C5WLWGDK35)'
 
-    app.development do
-      # This entitlement is required during development but must not be used for release.
-      app.entitlements['get-task-allow'] = true
-
-      #testflight
-      app.testflight.api_token = config['testflight']['api_token']
-      app.testflight.team_token = config['testflight']['team_token']
-
-      #apple cert stuff
-      app.provisioning_profile = config['development']['provisioning_profile']
-      app.codesign_certificate = config['development']['certificate']
-    end
-
-    app.release do
-      app.provisioning_profile = config['release']['provisioning']
-      app.codesign_certificate = config['release']['certificate']
-      app.seed_id = config['release']['seed_id']
-    end
+    app.entitlements['get-task-allow'] = true
   end
 end
